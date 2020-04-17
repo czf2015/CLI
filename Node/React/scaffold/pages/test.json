@@ -1,0 +1,14 @@
+{
+    "page": "test",
+    "business": [
+        "Banner",
+        "Test",
+        {
+            "name": "OtherTest",
+            "partials": [
+                "Sec1",
+                "Sec2"
+            ]
+        }
+    ]
+}
