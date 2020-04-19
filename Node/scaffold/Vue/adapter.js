@@ -1,18 +1,16 @@
 module.exports = (business) =>
 `const components = {
-${business.map(component => typeof component === 'string'
-? `    ${component}: {
-        componentName: '${component}',
+${business
+    .map(component => {
+        const componentName = typeof component === 'string' ? component : component.name
+        return `    ${componentName}: {
+        componentName: '${componentName}',
         convert(data, childBlocks) {
             return {...data, childBlocks}
         }
     },`
-: `    ${component.name}: {
-        componentName: '${component.name}',
-        convert(data, childBlocks) {
-            return {...data, childBlocks}
-        }
-    },`).join('\n')}
+    }).join('\n')
+}
 }
 
 

@@ -10,30 +10,30 @@ module.exports = (page, component, partials) => {
 
 
 <script>
-    // import  from ''
+// import  from ''
 
-    export default {
-        props: {
-            data: {
-                type: Object,
-                required: true
-            }
-        },
-
-        data() {
-            return {
-            }
-        },
-
-        mounted() {
+export default {
+    props: {
+        data: {
+            type: Object,
+            required: true
         }
+    },
+
+    data() {
+        return {
+        }
+    },
+
+    mounted() {
     }
+}
 </script>
 
 
 <style scoped>
-    #${id} {
-    }
+#${id} {
+}
 </style>`
         )
     } else {
@@ -47,40 +47,40 @@ module.exports = (page, component, partials) => {
 
 
 <script>
-    import adapter from "./adapter";
+import adapter from "./adapter";
 
-    export default {
-        components: {
-${partials.map(partial => typeof partial === 'string'
-    ? `
-            ${partial}: () => import('./partials/${partial}'),`
-    : `
-            ${partial.name}: () => import('./partials/${partial.name}'),`
-).join('')}
-        },
+export default {
+    components: {
+${partials
+    .map(partial => {
+        const componentName = typeof partial === 'string' ? partial : partial.name
+        return `        ${componentName}: () => import('./partials/${componentName}'),`
+    }).join('\n')
+}
+    },
 
-        props: {
-            data: {
-                type: Object,
-                required: true
-            }
-        },
-
-        computed: {
-            list() {
-                return adapter(this.data.childBlocks)
-            }
-        },
-
-        mounted() {
+    props: {
+        data: {
+            type: Object,
+            required: true
         }
+    },
+
+    computed: {
+        list() {
+            return adapter(this.data.childBlocks)
+        }
+    },
+
+    mounted() {
     }
+}
 </script>
 
 
 <style scoped>
-    #${id} {
-    }
+#${id} {
+}
 </style>`
         )
     }

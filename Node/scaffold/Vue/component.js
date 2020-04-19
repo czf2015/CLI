@@ -10,78 +10,82 @@ module.exports = (component, partials) => {
 
 
 <script>
-    export default {
-        props: {
-            data: {
-                type: Object,
-                // required: true
-            }
-        },
-
-        data() {
-            return {
-            }
-        },
-
-        mounted() {
+export default {
+    props: {
+        data: {
+            type: Object,
+            // required: true
         }
+    },
+
+    data() {
+        return {
+        }
+    },
+
+    computed: {
+    },
+
+    mounted() {
     }
+}
 </script>
 
 
 <style scoped>
-    .${cls} {
-    }
+.${cls} {
+}
 </style>`
         )
-    } else {
-        return (
+    }
+
+    return (
 `<template>
     <dic class="${cls}">
-        <component v-for="item in list" :key="item.id || item.type" :is="item.componentName" :data="item.data" />
     </dic>
 </template>
 
 
 <script>
-    import adapter from "./adapter";
+${partials
+    .map(partial => {
+        const componentName = typeof partial === 'string' ? partial : partial.name
+        return `import ${componentName} from './partials/${componentName}'`
+    }).join('\n')
+}
 
-    export default {
-        components: {
-${partials.map(partial => typeof partial === 'string'
-    ? `
-            ${partial}: () => import('./partials/${partial}'),`
-    : `
-            ${partial.name}: () => import('./partials/${partial.name}'),`
-).join('')}
-        },
+export default {
+    components: {
+${partials
+    .map(partial => {
+        const componentName = typeof partial === 'string' ? partial : partial.name
+        return `        ${componentName},`
+    }).join('\n')
+}
+    },
 
-        props: {
-            data: {
-                type: Object,
-                // required: true
-            }
-        },
-
-        computed: {
-            list() {
-                return adapter(this.data.childBlocks)
-            }
-        },
-
-        methods: {
-        },
-
-        mounted() {
+    props: {
+        data: {
+            type: Object,
+            // required: true
         }
-    };
+    },
+
+    computed: {
+    },
+
+    methods: {
+    },
+
+    mounted() {
+    }
+};
 </script>
 
 
 <style scoped>
-    .${cls} {
-    }
+.${cls} {
+}
 </style>`
         )
-    }
 }
