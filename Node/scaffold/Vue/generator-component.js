@@ -1,9 +1,9 @@
 const fs = require('fs')
 const mkdirp = require('mkdirp')
-const componentTpl = require('../component')
+const componentTpl = require('./componentTpl')
 
-const [component, ...partials] = process.argv.slice(2)
-const relative = `${__dirname}/../../src/components`
+const [category, component, ...partials] = process.argv.slice(2)
+const relative = `${__dirname}/../src/components/${category}`
 
 const h = (...components) => components.reduce((page, component) => `${page}-${component.replace(/[A-Z]/, c => c.toLowerCase())}`)
 

@@ -1,8 +1,8 @@
-const adapterTpl = require(`${__dirname}/../adapter`)
-const businessTpl = require(`${__dirname}/../business`)
-const pageTpl = require(`${__dirname}/../page`)
-const componentTpl = require(`${__dirname}/../component`)
-const rawJSON = require(`${__dirname}/${process.argv[2]}.json`)
+const adapterTpl = require('./adapterTpl')
+const businessTpl = require('./businessTpl')
+const pageTpl = require('./pageTpl')
+const componentTpl = require('./componentTpl')
+const rawJSON = require(`${__dirname}/pages/${process.argv[2]}.json`)
 const mkdirp = require('mkdirp')
 const fs = require('fs')
 
@@ -10,7 +10,7 @@ const h = (...components) => components.reduce((page, component) => `${page}-${c
 
 function generate(rawJSON) {
     const {page, business} = rawJSON
-    const relative = `${__dirname}/../../src/pages/${page}`
+    const relative = `${__dirname}/../src/pages/${page}`
     mkdirp(`${relative}/business`, err => {
         fs.writeFile(`${relative}/index.vue`, pageTpl(page, business), console.log)
         fs.writeFile(`${relative}/adapter.js`, adapterTpl(business), console.log)
