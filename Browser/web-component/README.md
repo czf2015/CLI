@@ -1,4 +1,5 @@
-# example
+# web-component框架
+
 ```sh
 # npm安装serve
 npm install
