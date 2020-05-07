@@ -1,0 +1,1 @@
+export default  ['home-page', 'demo-page'].map(tag => ({ path: `/${tag}`, tag}))

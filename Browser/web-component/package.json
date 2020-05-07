@@ -1,0 +1,14 @@
+{
+  "name": "web-component",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "npx serve -s ."
+  },
+  "author": "czf2015",
+  "license": "MIT",
+  "dependencies": {
+    "serve": "^11.2.0"
+  }
+}
