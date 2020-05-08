@@ -8,4 +8,4 @@
 
 - [x] static 静态资源服务
 
-- [ ] koa-mini 类似koa的服务端框架 
+- [x] koa-mini 类似koa的服务端框架 
