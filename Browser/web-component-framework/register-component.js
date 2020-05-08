@@ -1,6 +1,6 @@
 
 import Header from './layouts/header/Header.js'
-import Footer from './layouts/./Footer/Footer.js'
+import Footer from './layouts/Footer/Footer.js'
 import Router from './Router.js'
 import HomePage from './pages/homePage/index.js'
 import DemoPage from './pages/demoPage/_demo.js'
