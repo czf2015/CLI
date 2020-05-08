@@ -6,7 +6,7 @@ const views = require('koa-views')
 const consola = require('consola')
 const bodyParser = require('koa-bodyparser')
 const session = require('koa-generic-session')
-const config = require('../config')
+const config = require('./config')
 // https://github.com/rkusa/koa-passport#usage
 const passport = require('./middleware/passport.js')
 

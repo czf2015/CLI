@@ -3,60 +3,65 @@
 
 ## 一 wget简介
 
-wget是linux上的命令行的下载工具。这是一个GPL许可证下的自由软件。wget支持HTTP和FTP协议，支持代理服务器和断点续传功能，能够自动递归远程主机的目录，找到合乎条件的文件并将其下载到本地硬盘上；如果必要，wget将恰当地转换页面中的超级连接以在本地生成可浏览的镜像。由于没有交互式界面，wget可在后台运行，截获并忽略HANGUP信号，因此在用户推出登录以后，仍可继续运行。通常，wget用于成批量地下载Internet网站上的文件，或制作远程网站的镜像。
+wget是linux上的命令行的下载工具。这是一个GPL许可证下的自由软件。**wget支持HTTP和FTP协议，支持代理服务器和断点续传功能，能够自动递归远程主机的目录，找到合乎条件的文件并将其下载到本地硬盘上；如果必要，wget将恰当地转换页面中的超级连接以在本地生成可浏览的镜像**。由于没有交互式界面，wget可在后台运行，截获并忽略HANGUP信号，因此在用户推出登录以后，仍可继续运行。**通常，wget用于成批量地下载Internet网站上的文件，或制作远程网站的镜像。**
 
 
 ## 二 实例
 
-下载
 
-1、下载192.168.1.168首页并且显示下载信息
+1. 下载
 
+```sh 
+# 1. 下载
+# 下载192.168.1.168首页并且显示下载信息
 wget -d http://192.168.1.168
 
-2、下载192.168.1.168首页并且不显示任何信息
-
+# 下载192.168.1.168首页并且不显示任何信息
 wget -q http://192.168.1.168
 
-3、批量下载的情形，把所有需要下载文件的地址放到 filename.txt 中，然后 wget 就会自动为你下载所有文件了。
-
+# 批量下载的情形，把所有需要下载文件的地址放到 filename.txt 中，然后 wget 就会自动为你下载所有文件了。
 wget -i filelist.txt
 
-4、下载到指定目录
+# 下载到指定目录
+wget -P/tmp ftp://user:passwd@url/file # 把文件file下载到/tmp目录下。
 
-wget -P/tmp ftp://user:passwd@url/file
-
-把文件file下载到/tmp目录下。
-
-5、下载 http://example.com 网站上 packages 目录中的所有文件。其中，-np 的作用是不遍历父目录，-nd 表示不在本机重新创建目录结构。
-
+# 下载 http://example.com 网站上 packages 目录中的所有文件。其中，-np 的作用是不遍历父目录，-nd 表示不在本机重新创建目录结构。
 wget -r -np -nd http://example.com/packages/
 
-6、仅下载 i386 目录中所有扩展名为 iso 的文件。你也可以指定多个扩展名，只需用逗号分隔即可。
-
+# 仅下载 i386 目录中所有扩展名为 iso 的文件。你也可以指定多个扩展名，只需用逗号分隔即可。
 wget -r -np -nd --accept=iso http://example.com/centos-5/i386/
 
-7、断点续传
-
+# 2. 断点续传
 wget -c http://example.com/really-big-file.iso
 
-8、制作网站镜像ghost
-
+# 3. 制作网站镜像ghost
 wget -m -k (-H) http://www.example.com/
+```
 
-三 参数
 
-代码:
+2. 断点续传
+
+```sh
+wget -c http://example.com/really-big-file.iso
+```
+
+3. 制作网站镜像ghost
+
+```sh
+wget -m -k (-H) http://www.example.com/
+```
+
+
+## 三 参数
+
 
 $ wget --help
-
-GNU Wget 1.9.1，非交互式的网络文件下载工具。
 
 用法： wget [选项]... [URL]...
 
 长选项必须用的参数在使用短选项时也是必须的。
 
-启动：
+> 启动：
 
 -V, --version 显示 Wget 的版本并且退出。
 
@@ -66,7 +71,7 @@ GNU Wget 1.9.1，非交互式的网络文件下载工具。
 
 -e, -execute=COMMAND 运行‘.wgetrc’形式的命令。
 
-日志记录及输入文件：
+> 日志记录及输入文件：
 
 -o, --output-file=文件 将日志消息写入到指定文件中。
 
@@ -86,7 +91,7 @@ GNU Wget 1.9.1，非交互式的网络文件下载工具。
 
 -B, --base=URL 使用 -F -i 文件选项时，在相对链接前添加指定的 URL。
 
-下载：
+> 下载：
 
 -t, --tries=次数 配置重试次数（0 表示无限）。
 
@@ -126,7 +131,7 @@ GNU Wget 1.9.1，非交互式的网络文件下载工具。
 
 --restrict-file-names=OS 限制文件名中的字符为指定的 OS (操作系统) 所允许的字符。
 
-目录：
+> 目录：
 
 -nd --no-directories 不创建目录。
 
@@ -138,7 +143,7 @@ GNU Wget 1.9.1，非交互式的网络文件下载工具。
 
 --cut-dirs=数目 忽略远程目录中指定数目的目录层。
 
-HTTP 选项：
+> HTTP 选项：
 
 --http-user=用户 配置 http 用户名。
 
@@ -174,7 +179,7 @@ HTTP 选项：
 
 --post-file=文件 使用 POST 方法，发送指定文件中的内容。
 
-HTTPS (SSL) 选项：
+> HTTPS (SSL) 选项：
 
 --sslcertfile=文件 可选的客户段端证书。
 
@@ -194,7 +199,7 @@ HTTPS (SSL) 选项：
 
 1=SSLv2 2=SSLv3 3=TLSv1
 
-FTP 选项：
+> FTP 选项：
 
 -nr, --dont-remove-listing 不删除“.listing”文件。
 
@@ -204,7 +209,7 @@ FTP 选项：
 
 --retr-symlinks 在递归模式中，下载链接所指示的文件(连至目录则例外）。
 
-递归下载：
+> 递归下载：
 
 -r, --recursive 递归下载。
 
@@ -222,7 +227,7 @@ FTP 选项：
 
 --strict-comments 打开对 HTML 备注的严格(SGML)处理选项。
 
-递归下载时有关接受/拒绝的选项：
+> 递归下载时有关接受/拒绝的选项：
 
 -A, --accept=列表 接受的文件样式列表，以逗号分隔。
 
@@ -248,180 +253,217 @@ FTP 选项：
 
 -np, --no-parent 不搜索上层目录。
 
-四 FQA
 
-A.使用wget工具
+## 四 FQA
 
-linux所以的主要版本都自带了wget这个下载工具.
 
-bash$ wget http://place.your.url/here
+### A.使用wget工具
 
-它还能控制ftp来下载整个web站点的各级目录,当然,如果你不小心,可能会把整个网站以及其他和他做链接的网站全部下载下来.
 
-bash$ wget -m http://target.web.site/subdirectory
+```sh
+# linux所有主要版本都自带了wget这个下载工具.
+wget http://place.your.url/here
+```
 
-由于这个工具具有很强的下载能力,所以可以在服务器上把它用作镜像网站的工具.让它按照”robots.txt”的规定来执行.
 
-有很多参数用来控制它如何正确地做镜像,可以限制链接的类型和下载文件的类型等等.例如:只下载有联系的链接并且忽略GIF图片:
+```sh
+# 它还能控制ftp来下载整个web站点的各级目录,当然,如果你不小心,可能会把整个网站以及其他和他做链接的网站全部下载下来.
+wget -m http://target.web.site/subdirectory
+```
 
-bash$ wget -m -L –reject=gif http://target.web.site/subdirectory
+    由于这个工具具有很强的下载能力,所以可以在服务器上把它用作镜像网站的工具.让它按照”robots.txt”的规定来执行.
 
-wget也能够实现断点续传(-c参数),当然,这种操作是需要远程服务器支持的.
+```sh
+# 有很多参数用来控制它如何正确地做镜像,可以限制链接的类型和下载文件的类型等等.例如:只下载有联系的链接并且忽略GIF图片:
+wget -m -L –reject=gif http://target.web.site/subdirectory
+```
 
-bash$ wget -c http://the.url.of/incomplete/file
+```sh
+# wget也能够实现断点续传(-c参数),当然,这种操作是需要远程服务器支持的.
+wget -c http://the.url.of/incomplete/file
+```
 
-可以把断点续传和镜像功能结合起来,这样可以在以前断过多次的情况下继续镜像一个有大量选择性文件的站点.如何自动实现这个目的我们在后面会讨论得更多.
+    可以把断点续传和镜像功能结合起来,这样可以在以前断过多次的情况下继续镜像一个有大量选择性文件的站点.如何自动实现这个目的我们在后面会讨论得更多.
 
-如果你觉得下载时老是断线会影响你办公的话,你可以限制wget重试的次数.
+```sh
+# 如果你觉得下载时老是断线会影响你办公的话,你可以限制wget重试的次数.
+wget -t 5 http://place.your.url/here
+```
 
-bash$ wget -t 5 http://place.your.url/here
+    这样重试五次后就放弃了.用”-t inf”参数表示永远不放弃.不停地重试.
 
-这样重试五次后就放弃了.用”-t inf”参数表示永远不放弃.不停地重试.
 
-B．那对于代理服务该怎么办呢?
+### B．那对于代理服务该怎么办呢?
 
 可以使用http代理的参数或者在.wgetrc配置文件里指定一个如何通过代理去下载的途径.但是有这么一个问题,如果通过代理来进行断点续传的话可能会有几次失败.如果有一次通过代理下载的过程发生中断,那么代理服务器上缓存里保存是那个完整的文件拷贝. 所以当你用”wget -c”来下载剩余部分的时候代理服务器查看它的缓存,并错误地认为你已经下载了整个文件.于是就发出了错误的信号.这个时候你可以用添加一个特定的请求参数来促使代理服务器清除他们的缓存:
 
-bash$ wget -c –header=”Pragma: no-cache” http://place.your.url/here
+```sh
+wget -c –header=”Pragma: no-cache” http://place.your.url/here
+```
 
 这个”–header”参数能够以各种数字，各种方式添加。通过它我们可以更改web服务器或者代理服务器的某些属性。有些站点不提供外部连接的文件服务，只有通过同一个站点上其他的一些页面时内容才会被提交。这个时候你可以用加上”Referer:”参数：
 
-bash$ wget –header=”Referer: http://coming.from.this/page” http://surfing.to.this/page
+```sh
+wget –header=”Referer: http://coming.from.this/page” http://surfing.to.this/page
+```
 
 有些特殊的网站只支持某种特定的浏览器，这个时候可以用”User-Agent:”参数
 
-bash$ wget –header=”User-Agent: Mozilla/4.0 (compatible; MSIE 5.0;Windows NT; DigExt)” http://msie.only.url/here
+```sh
+wget –header=”User-Agent: Mozilla/4.0 (compatible; MSIE 5.0;Windows NT; DigExt)” http://msie.only.url/here
+```
 
-C．那我怎么设定下载时间呢？
+
+### C．那我怎么设定下载时间呢？
 
 如果你需要在你的办公电脑上通过和其他同事共享的一个连接来下载一些很大的文件，而且你希望你的同事不会因为网络速度的减慢而收到影响，那你就应该尽量避开高峰时段。当然,不需要在办公室里等到所以人都走掉，也不需要在家里用完晚饭后还惦记着要上网下载一次。
 
 用at来就可以很好的定制工作时间：
 
-bash$ at 23：00
-
-warning: commands will be executed using /bin/sh
-
-at> wget http://place.your.url/here
-
-at> press Ctrl-D
+```sh
+at 23：00
+# warning: commands will be executed using /bin/sh
+# at> 
+wget http://place.your.url/here
+# 退出 
+# press Ctrl-D
+```
 
 这样，我们设定了下载工作在晚上11点进行。为了使这个安排能够正常进行，请确
 
 认atd这个后台程序正在运行。
 
-D．下载要花很多时间？
+
+### D．下载要花很多时间？
 
 当你需要下载大量的数据，而且你又没有享有足够的带宽,这个时候你会经常发现在你安排的下载任务还没有完成，一天的工作却又要开始了。
 
 作为一个好同事，你只能停掉了这些任务，而开始另外的工作。然后你又需要反复地重复使用”wget -c”来完成你的下载。这样肯定太繁琐了，所以最好是用crontab来自动执行。创建一个纯文本文件，叫做”crontab.txt”,包含下面的内容：
 
-0 23 * * 1-5 wget -c -N http://place.your.url/here
+0 23 * * 1-5 
+wget -c -N http://place.your.url/here
 
-0 6 * * 1-5 killall wget
+0 6 * * 1-5 
+kill all wget
 
 这个crontab文件指定某些任务定期地执行。前五列声明是什么时候执行这个命令，而每行的剩余部分则告诉crontab执行什么内容。
 
 前两列指定了每天一到晚上11点就开始用wget下载，一到早上6点就停止一切wget下载。第三四列的*表示每个月的每一天都执行这个任务。第五列则指定了一个星期的哪几天来执行这个程序。 –”1-5″表示从星期一到星期五。
 
-这样在每个工作日的晚上11点，下载工作开始，到了上午的6点，任何的wget任务就被停掉了。你可以用下面的命令来执行crontab：bash$ crontab crontab.txt
+这样在每个工作日的晚上11点，下载工作开始，到了上午的6点，任何的wget任务就被停掉了。你可以用下面的命令来执行crontab：```sh
+crontab crontab.txt
+```
 
 wget的这个”-N”参数将会检查目标文件的时间戳，如果匹配了，下载程序就会停止，因为它说明整个文件已经下载完全了。
 
 用”crontab -r”可以删除这个计划安排。我已经多次采用这种方法，通过共享的电话拨号来下载过很多的ISO镜像文件,还是比较实用的。
 
-E．如何下载动态变化的网页
+
+### E. 如何下载动态变化的网页
 
 有些网页每天都要根据要求变化好几次.所以从技术上讲,目标不再是一个文件,它没有文件长度.因此”-c”这个参数也就失去了意义.
 
 例如:一个PHP写的并且经常变动的linux周末新闻网页:
 
-bash$ wget http://lwn.net/bigpage.php3
+```sh
+wget http://lwn.net/bigpage.php3
+```
 
 我办公室里的网络条件经常很差,给我的下载带了很大的麻烦,所以我写了个简单的脚本来检测动态页面是否已经完全更新了.
 
+```sh
 #!/bin/bash
 
-#create it if absent
-
+# create it if absent
 touch bigpage.php3
 
-#check if we got the whole thing
-
+# check if we got the whole thing
 while ! grep -qi bigpage.php3
-
 do
-
 rm -f bigpage.php3
-
-#download LWN in one big page
-
+# download LWN in one big page
 wget http://lwn.net/bigpage.php3
-
 done
+```
 
 这个脚本能够保证持续的下载该网页,直到网页里面出现了" ",这就表示该文件已经完全更新了.
 
-F．对于ssl和Cookies怎么办？
+
+### F．对于ssl和Cookies怎么办？
 
 如果你要通过ssl来上网,那么网站地址应该是以”https://”来开头的.在这样的情况下你就需要另外一种下载工具,叫做curl，它能够很容易获得.有些网站迫使网友在浏览的时候必须使用cookie.所以你必须从在网站上得到的那个 Cookie里面得到”Cookie:”这个参数.这样才
 
 能保证下载的参数正确.对于lynx和Mozilla的Cookie的文件格式,用下面的:
 
-bash$ cookie=$( grep nytimes ~/.lynx_cookies |awk {printf(”%s=%s;”,$6,$7)} )
+```sh
+cookie=$( grep nytimes ~/.lynx_cookies |awk {printf(”%s=%s;”,$6,$7)} )
+```
 
 就可以构造一个请求Cookie来下载http://www.nytimes.com上的内容.当然,你要已经用这个浏览器在该网站上完成注册.
 
 w3m使用了一种不同的,更小巧的Cookie文件格式:
 
-bash$ cookie=$( grep nytimes ~/.w3m/cookie |awk {printf(”%s=%s;”,$2,$3)} )
+```sh
+cookie=$( grep nytimes ~/.w3m/cookie |awk {printf(”%s=%s;”,$2,$3)} )
+```
 
 现在就可以用这种方法来下载了:
 
-bash$ wget –header=”Cookie: $cookie” http://www.nytimes.com/reuters/technology/tech-tech-supercomput.html
+```sh
+wget –header=”Cookie: $cookie” http://www.nytimes.com/reuters/technology/tech-tech-supercomput.html
+```
 
 或者用curl工具:
 
-bash$ curl -v -b $cookie -o supercomp.html http://www.nytimes.com/reuters/technology/tech-tech-supercomput.htm
+```sh
+curl -v -b $cookie -o supercomp.html http://www.nytimes.com/reuters/technology/tech-tech-supercomput.htm
+```
 
-G．如何建立地址列表？
+
+### G．如何建立地址列表？
 
 到现在为止我们下载的都是单个文件或者是整个网站.有的时候我们需要下载某个网页上链接的大量文件,但没有必要把它整个网站都镜像下来.比如说我们想从一个依次排列的100首歌里面下载前20首.注意,这里”–accept”和”–reject”参数是不会起作用的, 因为他们只对文件操作起作用.所以一定要用”lynx -dump”参数来代替.
 
-bash$ lynx -dump ftp://ftp.ssc.com/pub/lg/ |grep gz$ |tail -10 |awk {print $2} > urllist.txt
+```sh
+lynx -dump ftp://ftp.ssc.com/pub/lg/ |grep gz$ |tail -10 |awk {print $2} > urllist.txt
+```
 
 lynx的输出结果可以被各种GNU文本处理工具过虑.在上面的例子里,我们的链接地址是以”gz”结尾的,并且把最后10个文件地址放到urllist.txt文件里.然后我们可以写一个简单的bash脚本来自动下载这个文件里的目标文件:
 
-bash$ for x in $(cat urllist.txt)
+```sh
+#!/bin/bash
 
-> do
-
-> wget $x
-
-> done
+for x in $(cat urllist.txt)
+do
+wget $x
+done
+```
 
 这样我们就能够成功下载Linux Gazette网站(ftp://ftp.ssc.com/pub/lg/)上的最新10个论题.
 
-H．扩大使用的带宽
 
-如果你选择下载一个受带宽限制的文件,那你的下载会因为服务器端的限制而变得很慢.下面这个技巧会大大缩短下载的过程.但这个技巧需要你使用curl并且远程服务器有多个镜像可以供你下载.例如,假设你想从下面的三个地址下载Mandrake 8.0:
+### H．扩大使用的带宽
 
+如果你选择下载一个受带宽限制的文件,那你的下载会因为服务器端的限制而变得很慢.下面这个技巧会大大缩短下载的过程.但这个技巧需要你使用curl并且远程服务器有多个镜像可以供你下载.
+```sh
+#!/bin/bash
+
+# 例如,假设你想从下面的三个地址下载Mandrake 8.0:
 url1=http://ftp.eecs.umich.edu/pub/linux/mandrake/iso/Mandrake80-inst.iso
-
 url2=http://ftp.rpmfind.net/linux/Mandrake/iso/Mandrake80-inst.iso
-
 url3=http://ftp.wayne.edu/linux/mandrake/iso/Mandrake80-inst.iso
 
-这个文件的长度是677281792个字节,所以用curl程序加”–range”参数来建立三个同时进行的下载:
+# 这个文件的长度是677281792个字节,所以用curl程序加”–range”参数来建立三个同时进行的下载:
+curl -r 0-199999999 -o mdk-iso.part1 $url1 &
+curl -r 200000000-399999999 -o mdk-iso.part2 $url2 &
+curl -r 400000000- -o mdk-iso.part3 $url3 &
+```
 
-bash$ curl -r 0-199999999 -o mdk-iso.part1 $url1 &
+这样就创建了三个后台进程.每个进程从不同的服务器传输这个ISO文件的不同部分.这个”-r”参数指定目标文件的字节范围.
 
-bash$ curl -r 200000000-399999999 -o mdk-iso.part2 $url2 &
-
-bash$ curl -r 400000000- -o mdk-iso.part3 $url3 &
-
-这样就创建了三个后台进程.每个进程从不同的服务器传输这个ISO文件的不同部分.这个”-r”参数指定目标文件的字节范围.当这三个
-
-进程结束后,用一个简单的cat命令来把这三个文件衔接起来– cat mdk-iso.part? > mdk-80.iso.(强烈建议在刻盘之前先检查md5)
+```sh
+# 当这三个进程结束后, 用一个简单的cat命令来把这三个文件衔接起来, 强烈建议在刻盘之前先检查md5
+cat mdk-iso.part? > mdk-80.iso
+```
 
 你也可以用”–verbose”参数来使每个curl进程都有自己的窗口来显示传输的过程.

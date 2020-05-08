@@ -1,7 +1,7 @@
 // [郵箱驗證](https://nodemailer.com/about/)
 // [短信驗證](https://blog.csdn.net/ziwoods/article/details/77878594?utm_source=blogxgwz2)
 const nodemailer = require('nodemailer')
-const { store, smtp } = require('../config.js')
+const { store, smtp } = require('../config')
 
 module.exports = async (ctx, next) => {
     const { username, email } = ctx.request.body
