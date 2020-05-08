@@ -2,8 +2,8 @@
 import Header from './layouts/header/Header.js'
 import Footer from './layouts/./Footer/Footer.js'
 import Router from './Router.js'
-import HomePage from './pages/homePage/HomePage.js'
-import DemoPage from './pages/demoPage/DemoPage.js'
+import HomePage from './pages/homePage/index.js'
+import DemoPage from './pages/demoPage/_demo.js'
 
 window.customElements.define('app-header', Header);
 window.customElements.define('app-footer', Footer);

@@ -26,7 +26,7 @@ class AppContainer extends AbstractShadow {
     listen() {
         {
             this.shadow.querySelector('h1').addEventListener('click', () => {             
-                const paths = ['/', '/home-page', '/demo-page'];
+                const paths = ['/', '/demoPage'];
                 const pathIndex = paths.indexOf(window.location.pathname) + 1
                 window.location.pathname = pathIndex < paths.length ?  paths[pathIndex] : paths[0]
                 

@@ -1,1 +1,10 @@
-export default  ['home-page', 'demo-page'].map(tag => ({ path: `/${tag}`, tag}))
+export default [
+    {
+        path: '/',
+        tag: 'home-page'
+    },
+    {
+        path: '/demoPage',
+        tag: 'demo-page'
+    },
+]
