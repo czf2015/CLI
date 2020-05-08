@@ -3,7 +3,7 @@ export function observe(data = {}) {
     return new Proxy(data, {
         set: (target, key, receiver) => {
             const val = Reflect.set(target, key, receiver)
-            this.shadow.innerHTML = this.template;
+            this.shadow.innerHTML = this.template
             this.listen();
             return val;
         }
