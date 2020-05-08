@@ -23,11 +23,11 @@ npm run start
 
 - app.js -- 入口文件
 
+- register-component.js -- 最上层组件注册
+
 - Router.js -- 前端路由
 
 - layouts -- 页面框架
-    |__ default.js -- 默认
-    |__ partials -- 部件
 
 - pages -- 各子页面
     |__ homePage -- 主页
@@ -37,6 +37,8 @@ npm run start
           |__ DemoPage.js 页面组件
 
 - components -- 通用组件
+
+- helper.js -- 基础函数
 
 - apis -- mock接口
 
