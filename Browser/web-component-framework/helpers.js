@@ -1,9 +1,9 @@
 // 数据监听
-export function observe(data = {}) {
-    return new Proxy(data, {
+export function observe(state = {}) {
+    return new Proxy(state, {
         set: (target, key, receiver) => {
             const val = Reflect.set(target, key, receiver)
-            this.shadow.innerHTML = this.render(data)
+            this.shadow.innerHTML = this.render(state)
             this.listen();
             return val;
         }
