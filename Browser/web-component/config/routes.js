@@ -4,7 +4,7 @@ export default [
         tag: 'home-page'
     },
     {
-        path: '/demoPage',
+        path: '/demoPage/:demo',
         tag: 'demo-page'
     },
 ]
