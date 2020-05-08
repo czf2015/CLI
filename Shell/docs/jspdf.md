@@ -1,0 +1,1 @@
+https://parall.ax/products/jspdf
