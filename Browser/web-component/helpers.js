@@ -66,6 +66,23 @@ export class AbstractShadow extends HTMLElement {
 export class BrowserRoute extends AbstractShadow {
     render() {
         const { path, tag } = this.props
-        return window.location.pathname === path ? `<${tag}></${tag}>` : ''
+        const isShow = () => {
+            const paths = (window.location.pathname || '/').split('/')
+            const slugs = path.split('/')
+            if (slugs.length !== paths.length) {
+                return false
+            }
+            for (let i = 0; i < slugs.length; i++) {
+                if (slugs[i].includes(':')) {
+                    return true
+                } else {
+                    if (slugs[i] !== paths[i]) {
+                        return false
+                    }
+                }
+            }
+            return true
+        }
+        return isShow() ? `<${tag}></${tag}>` : ''
     }
 }

@@ -26,10 +26,10 @@ class AppContainer extends AbstractShadow {
     listen() {
         {
             this.shadow.querySelector('h1').addEventListener('click', () => {             
-                const paths = ['/', '/demoPage/:demo'];
+                const paths = ['/', '/demoPage/test'];
                 const pathIndex = paths.indexOf(window.location.pathname) + 1
                 window.location.pathname = pathIndex < paths.length ?  paths[pathIndex] : paths[0]
-                
+
                 // 验证单向传递
                 // this.shadow.querySelector('app-header').props.operation = 'sub'
             })
