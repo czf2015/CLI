@@ -16,8 +16,9 @@ mkdir $HOME/testFolder
 # 使用 cd 命令切换目录
 cd $HOME/testFolder
 
-# 使用 cd ../ 命令切换到上一级目录
-cd ../
+# 使用 cd .. 命令切换到上一级目录
+cd ..
+```
 
 > 移动目录
 
