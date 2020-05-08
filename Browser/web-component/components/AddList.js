@@ -6,7 +6,7 @@ export default class AddList extends Component {
         // computed
         return (
             `<div>
-                <input type="text" value="${this.state.inputVal}" />
+                <input type="text" placeholder="hello" value="${this.state.inputVal}" />
                 <button type="button">add</button>
                 <ul>
                     ${this.state.list.map(item => `<li>${item}</li>`).join("")}
@@ -26,10 +26,11 @@ export default class AddList extends Component {
         {   // comments
             this.inputRef = this.shadow.querySelector("input");
             this.shadow.querySelector("button").addEventListener("click", () => {
-                if (this.inputRef.value) {
+                const inputVal = this.inputRef.value || this.inputRef.placeholder
+                if (inputVal) {
                     Object.assign(this.state, {
-                        inputVal: this.inputRef.value, 
-                        list: [...this.state.list, this.inputRef.value]
+                        inputVal,
+                        list: [...this.state.list, inputVal]
                     })
                 }
             });

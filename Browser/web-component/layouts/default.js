@@ -16,7 +16,7 @@ window.customElements.define('demo-page', DemoPage);
 export default class Layout extends Component {
     get template() {
         return (
-        `<app-header></app-header>
+        `<app-header props="add"></app-header>
         <main class="app-container">
             <h1>Click Me!</h1>
             <app-router></app-router>
@@ -34,12 +34,19 @@ export default class Layout extends Component {
         )
     }
 
+    // get data() {
+    //     return {
+    //         operation: 'add'
+    //     }
+    // }
+
     listen() {
         {
             this.shadow.querySelector('h1').addEventListener('click', () => {
-                const paths = ['/', '/home-page', '/demo-page'];
-                const pathIndex = paths.indexOf(window.location.pathname) + 1
-                window.location.pathname = pathIndex < paths.length ?  paths[pathIndex] : paths[0]
+                this.shadow.querySelector('app-header').state.props = 'sub'
+                // const paths = ['/', '/home-page', '/demo-page'];
+                // const pathIndex = paths.indexOf(window.location.pathname) + 1
+                // window.location.pathname = pathIndex < paths.length ?  paths[pathIndex] : paths[0]
             })
         }
     }
