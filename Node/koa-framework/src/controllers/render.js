@@ -1,5 +1,5 @@
 const Router = require('koa-router')
-const render = require('../middlewares/render')
+const render = require('../middlewares/render.js')
 // 参数
 const tpl = 'home'
 const raw = {title: 'Koa2'}
