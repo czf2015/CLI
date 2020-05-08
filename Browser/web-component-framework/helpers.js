@@ -21,7 +21,7 @@ export class AbstractShadow extends HTMLElement {
         const props = {}
         const atrributes = this.getAttributeNames()
         atrributes.forEach(attribute => props[attribute] = this.getAttribute(attribute))
-        this.state = observe.bind(this)({...this.data(), ...props})
+        this.state = observe.bind(this)({ ...this.data(), ...props })
 
         this.shadow.innerHTML = this.render(this.state);
         this.listen()
