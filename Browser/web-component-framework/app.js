@@ -1,5 +1,5 @@
 import { AbstractShadow } from '../helpers.js'
-import './register-component.js'
+import './register-element.js'
 
 
 class AppContainer extends AbstractShadow {
@@ -25,13 +25,14 @@ class AppContainer extends AbstractShadow {
 
     listen() {
         {
+            const paths = ['/', '/demoPage/test'];
             this.shadow.querySelector('h1').addEventListener('click', () => {             
-                const paths = ['/', '/demoPage/test'];
                 const pathIndex = paths.indexOf(window.location.pathname) + 1
                 window.location.pathname = pathIndex < paths.length ?  paths[pathIndex] : paths[0]
 
                 // 验证单向传递
-                // this.shadow.querySelector('app-header').props.operation = 'sub'
+                this.shadow.querySelector('app-header').state.operation = pathIndex < paths.length ?  paths[pathIndex] : paths[0]
+
             })
         }
     }

@@ -1,14 +1,14 @@
-import { AbstractComponent } from '../../helpers.js'
+import { AbstractShadow } from '../../helpers.js'
 
 
-export default class Footer extends AbstractComponent {
-    render() {
+export default class Footer extends AbstractShadow {
+    render({ inputVal, list, operation }) {
         return (
             `<div>
-                <input type="text" value="${this.state.inputVal}" />
-                <button type="button">${this.props.operation}</button>
+                <input type="text" value="${inputVal}" />
+                <button type="button">${operation}</button>
                 <ul>
-                    ${this.state.list.map(item => `<li>${item}</li>`).join("")}
+                    ${list.map(item => `<li>${item}</li>`).join("")}
                 </ul>
             </div>`
         );

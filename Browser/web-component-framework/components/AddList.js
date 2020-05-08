@@ -1,15 +1,15 @@
-import { AbstractComponent } from '../helpers.js'
+import { AbstractShadow } from '../helpers.js'
 
 
-export default class AddList extends AbstractComponent {
-    render() {
+export default class AddList extends AbstractShadow {
+    render({ inputVal, list }) {
         // computed
         return (
             `<div>
-                <input type="text" placeholder="hello" value="${this.state.inputVal}" />
+                <input type="text" placeholder="hello" value="${inputVal}" />
                 <button type="button">add</button>
                 <ul>
-                    ${this.state.list.map(item => `<li>${item}</li>`).join("")}
+                    ${list.map(item => `<li>${item}</li>`).join("")}
                 </ul>
             </div>`
         );

@@ -1,12 +1,12 @@
-import { AbstractComponent } from '../helpers.js'
+import { AbstractShadow } from '../helpers.js'
 
 
-export default class DataBind extends AbstractComponent {
-    render() {
+export default class DataBind extends AbstractShadow {
+    render({ inputVal }) {
         return (
             `<div>
-                <input type="text" value="${this.state.inputVal}"/>
-                <h4>${this.state.inputVal}</h4>
+                <input type="text" value="${inputVal}"/>
+                <h4>${inputVal}</h4>
             </div>`
         );
     }
