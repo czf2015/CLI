@@ -63,7 +63,7 @@ export class AbstractShadow extends HTMLElement {
     listen() {}
 }
 
-export class Route extends AbstractShadow {
+export class BrowserRoute extends AbstractShadow {
     render() {
         const { path, tag } = this.props
         return window.location.pathname === path ? `<${tag}></${tag}>` : ''

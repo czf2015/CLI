@@ -1,8 +1,8 @@
 
-import { Route, AbstractShadow } from './helpers.js'
+import { BrowserRoute, AbstractShadow } from './helpers.js'
 import routes from './config/routes.js'
 
-window.customElements.define('browser-route', Route);
+window.customElements.define('browser-route', BrowserRoute);
 
 
 export default class Router extends AbstractShadow {
