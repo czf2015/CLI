@@ -11,7 +11,7 @@ export function observe(data = {}) {
 }
 
 // 双向数据绑定不适合内部嵌套其他组件的情况，当state改变时会导致嵌套的组件重新渲染
-export class Component extends HTMLElement {
+export class AbstractComponent extends HTMLElement {
     constructor() {
         super();
 
@@ -37,7 +37,7 @@ export class Component extends HTMLElement {
 }
 
 // 
-export class Shadow extends HTMLElement {
+export class AbstractShadow extends HTMLElement {
     constructor() {
         super();
 
@@ -55,7 +55,7 @@ export class Shadow extends HTMLElement {
     listen() {}
 }
 
-export class Route extends Shadow {
+export class Route extends AbstractShadow {
     get template() {
         const path = this.getAttribute('path')
         const tag = this.getAttribute('tag')

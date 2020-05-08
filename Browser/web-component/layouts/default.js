@@ -1,5 +1,5 @@
 
-import { Shadow } from '../helpers.js'
+import { AbstractShadow } from '../helpers.js'
 import Header from './partials/header/Header.js'
 import Footer from './partials/./Footer/Footer.js'
 import Router from '../Router.js'
@@ -13,7 +13,7 @@ window.customElements.define('home-page', HomePage);
 window.customElements.define('demo-page', DemoPage);
 
 
-export default class Layout extends Shadow {
+export default class Layout extends AbstractShadow {
     get template() {
         return (
         `<app-header operation="add"></app-header>

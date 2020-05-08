@@ -1,7 +1,7 @@
-import { Component } from '../helpers.js'
+import { AbstractComponent } from '../helpers.js'
 
 
-export default class DataBind extends Component {
+export default class DataBind extends AbstractComponent {
     get template() {
         return (
             `<div>

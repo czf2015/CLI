@@ -1,7 +1,7 @@
-import { Component } from '../helpers.js'
+import { AbstractComponent } from '../helpers.js'
 
 
-export default class AddList extends Component {
+export default class AddList extends AbstractComponent {
     get template() {
         // computed
         return (
