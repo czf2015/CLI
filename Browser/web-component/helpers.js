@@ -17,11 +17,13 @@ export class AbstractComponent extends HTMLElement {
 
         this.shadow = this.attachShadow({ mode: 'closed' });
 
-        // 双向数据绑定
+        // 单向传递
         const props = {}
         const atrributes = this.getAttributeNames()
         atrributes.forEach(attribute => props[attribute] = this.getAttribute(attribute))
         this.props = observe.bind(this)(props)
+        
+        // 内部状态
         this.state = observe.bind(this)(this.data())
 
         this.shadow.innerHTML = this.render();
@@ -43,6 +45,12 @@ export class AbstractShadow extends HTMLElement {
 
         this.shadow = this.attachShadow({ mode: 'closed' });
 
+        // 单向传递
+        const props = {}
+        const atrributes = this.getAttributeNames()
+        atrributes.forEach(attribute => props[attribute] = this.getAttribute(attribute))
+        this.props = observe.bind(this)(props)
+
         this.shadow.innerHTML = this.render();
         this.listen()
     }
@@ -57,8 +65,6 @@ export class AbstractShadow extends HTMLElement {
 
 export class Route extends AbstractShadow {
     render() {
-        const path = this.getAttribute('path')
-        const tag = this.getAttribute('tag')
-        return window.location.pathname === path ? `<${tag}></${tag}>` : ''
+        return window.location.pathname === this.props.path ? `<${this.props.tag}></${this.props.tag}>` : ''
     }
 }

@@ -36,11 +36,13 @@ export default class Layout extends AbstractShadow {
 
     listen() {
         {
-            // this.shadow.querySelector('app-header').props.operation = 'sub'
-            this.shadow.querySelector('h1').addEventListener('click', () => {
+            this.shadow.querySelector('h1').addEventListener('click', () => {             
                 const paths = ['/', '/home-page', '/demo-page'];
                 const pathIndex = paths.indexOf(window.location.pathname) + 1
                 window.location.pathname = pathIndex < paths.length ?  paths[pathIndex] : paths[0]
+                
+                // 验证单向传递
+                // this.shadow.querySelector('app-header').props.operation = 'sub'
             })
         }
     }
