@@ -1,0 +1,39 @@
+{
+    "name": "tracker-koa2",
+    "version": "1.0.0",
+    "description": "rebuild",
+    "main": "index.js",
+    "scripts": {
+        "dev": "nodemon index.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "nodemonConfig": {
+        "ignore": [
+            "test/*",
+            "doc/*",
+            "static/*",
+            "logs/*"
+        ],
+        "delay": "2500"
+    },
+    "author": "czf",
+    "license": "ISC",
+    "dependencies": {
+        "axios": "^0.19.0",
+        "bcrypt": "^3.0.6",
+        "consola": "^2.9.0",
+        "jsonwebtoken": "^8.5.1",
+        "koa": "^2.7.0",
+        "koa-bodyparser": "^4.2.1",
+        "koa-generic-session": "^2.0.1",
+        "koa-passport": "^4.1.3",
+        "koa-redis": "^4.0.0",
+        "koa-router": "^7.4.0",
+        "mongoose": "^5.6.0",
+        "nodemailer": "^6.2.1",
+        "passport-local": "^1.0.0"
+    },
+    "devDependencies": {
+        "nodemon": "^1.19.1"
+    }
+}
