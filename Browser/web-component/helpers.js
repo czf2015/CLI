@@ -22,7 +22,7 @@ export class AbstractComponent extends HTMLElement {
         const atrributes = this.getAttributeNames()
         atrributes.forEach(attribute => props[attribute] = this.getAttribute(attribute))
         this.props = observe.bind(this)(props)
-        
+
         // 内部状态
         this.state = observe.bind(this)(this.data())
 
@@ -65,6 +65,7 @@ export class AbstractShadow extends HTMLElement {
 
 export class Route extends AbstractShadow {
     render() {
-        return window.location.pathname === this.props.path ? `<${this.props.tag}></${this.props.tag}>` : ''
+        const { path, tag } = this.props
+        return window.location.pathname === path ? `<${tag}></${tag}>` : ''
     }
 }
