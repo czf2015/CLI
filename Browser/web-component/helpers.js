@@ -3,7 +3,7 @@ export function observe(data = {}) {
     return new Proxy(data, {
         set: (target, key, receiver) => {
             const val = Reflect.set(target, key, receiver)
-            this.shadow.innerHTML = this.template
+            this.shadow.innerHTML = this.render()
             this.listen();
             return val;
         }
@@ -22,15 +22,15 @@ export class AbstractComponent extends HTMLElement {
         const atrributes = this.getAttributeNames()
         atrributes.forEach(attribute => props[attribute] = this.getAttribute(attribute))
         this.props = observe.bind(this)(props)
-        this.state = observe.bind(this)(this.data)
+        this.state = observe.bind(this)(this.data())
 
-        this.shadow.innerHTML = this.template;
+        this.shadow.innerHTML = this.render();
         this.listen()
     }
 
-    get template() {}
+    render() {}
 
-    get data() {}
+    data() {}
 
     // 监听
     listen() {}
@@ -43,20 +43,20 @@ export class AbstractShadow extends HTMLElement {
 
         this.shadow = this.attachShadow({ mode: 'closed' });
 
-        this.shadow.innerHTML = this.template;
+        this.shadow.innerHTML = this.render();
         this.listen()
     }
 
-    get template() {}
+    render() {}
 
-    get data() {}
+    data() {}
 
     // 监听
     listen() {}
 }
 
 export class Route extends AbstractShadow {
-    get template() {
+    render() {
         const path = this.getAttribute('path')
         const tag = this.getAttribute('tag')
         return window.location.pathname === path ? `<${tag}></${tag}>` : ''

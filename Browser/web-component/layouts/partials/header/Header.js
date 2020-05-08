@@ -2,7 +2,7 @@ import { AbstractComponent } from '../../../helpers.js'
 
 
 export default class Footer extends AbstractComponent {
-    get template() {
+    render() {
         return (
             `<div>
                 <input type="text" value="${this.state.inputVal}" />
@@ -14,7 +14,7 @@ export default class Footer extends AbstractComponent {
         );
     }
 
-    get data() {
+    data() {
         return {
             inputVal: '',
             list: [],

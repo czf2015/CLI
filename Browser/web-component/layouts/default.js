@@ -14,7 +14,7 @@ window.customElements.define('demo-page', DemoPage);
 
 
 export default class Layout extends AbstractShadow {
-    get template() {
+    render() {
         return (
         `<app-header operation="add"></app-header>
         <main class="app-container">
@@ -26,7 +26,7 @@ export default class Layout extends AbstractShadow {
         
         <style>
             .app-container > h1 {
-                width:120px;
+                width: 120px;
                 border: solid;
                 cursor: pointer;
             }

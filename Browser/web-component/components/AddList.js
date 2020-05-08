@@ -2,7 +2,7 @@ import { AbstractComponent } from '../helpers.js'
 
 
 export default class AddList extends AbstractComponent {
-    get template() {
+    render() {
         // computed
         return (
             `<div>
@@ -15,7 +15,7 @@ export default class AddList extends AbstractComponent {
         );
     }
 
-    get data() {
+    data() {
         return {
             inputVal: '',
             list: [],

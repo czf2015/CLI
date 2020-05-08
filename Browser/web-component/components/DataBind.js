@@ -2,7 +2,7 @@ import { AbstractComponent } from '../helpers.js'
 
 
 export default class DataBind extends AbstractComponent {
-    get template() {
+    render() {
         return (
             `<div>
                 <input type="text" value="${this.state.inputVal}"/>
@@ -11,7 +11,7 @@ export default class DataBind extends AbstractComponent {
         );
     }
 
-    get data() {
+    data() {
         return {
             inputVal: 'hello'
         }

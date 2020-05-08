@@ -2,7 +2,7 @@ import { AbstractComponent } from '../../../helpers.js'
 
 
 export default class Footer extends AbstractComponent {
-    get template() {
+    render() {
         return (
             `app-footer`
         );
