@@ -1,11 +1,11 @@
 // 数据监听
-export function observe(state = {}) {
-    return new Proxy(state, {
+export function observe(target = {}) {
+    return new Proxy(target, {
         set: (target, key, receiver) => {
-            const val = Reflect.set(target, key, receiver)
-            this.shadow.innerHTML = this.render(state)
+            const retVal = Reflect.set(target, key, receiver)
+            this.shadow.innerHTML = this.render(target)
             this.listen();
-            return val;
+            return retVal;
         }
     })
 }
