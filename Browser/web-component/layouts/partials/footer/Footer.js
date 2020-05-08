@@ -1,4 +1,4 @@
-import Component from '../../../components/Component.js'
+import { Component } from '../../../helpers.js'
 
 
 export default class Footer extends Component {

@@ -1,15 +1,14 @@
 
-import Component from './components/Component.js'
-import BrowseRoute from './components/Route.js'
+import {Route, Shadow} from './helpers.js'
 import routes from './config/routes.js'
 
-window.customElements.define('browse-route', BrowseRoute);
+window.customElements.define('browser-route', Route);
 
 
-export default class Router extends Component {
+export default class Router extends Shadow {
     get template() {
         return routes
-            .map(({ path, tag }) => `<browse-route path="${path}" tag="${tag}"></browse-route>`)
+            .map(({ path, tag }) => `<browser-route path="${path}" tag="${tag}"></browser-route>`)
             .join('')
     }
 }

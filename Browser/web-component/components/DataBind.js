@@ -1,4 +1,4 @@
-import Component from './Component.js'
+import { Component } from '../helpers.js'
 
 
 export default class DataBind extends Component {

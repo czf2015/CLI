@@ -1,5 +1,5 @@
 
-import Component from '../components/Component.js'
+import { Shadow } from '../helpers.js'
 import Header from './partials/header/Header.js'
 import Footer from './partials/./Footer/Footer.js'
 import Router from '../Router.js'
@@ -13,10 +13,10 @@ window.customElements.define('home-page', HomePage);
 window.customElements.define('demo-page', DemoPage);
 
 
-export default class Layout extends Component {
+export default class Layout extends Shadow {
     get template() {
         return (
-        `<app-header props="add"></app-header>
+        `<app-header operation="add"></app-header>
         <main class="app-container">
             <h1>Click Me!</h1>
             <app-router></app-router>
@@ -34,19 +34,13 @@ export default class Layout extends Component {
         )
     }
 
-    // get data() {
-    //     return {
-    //         operation: 'add'
-    //     }
-    // }
-
     listen() {
         {
             this.shadow.querySelector('h1').addEventListener('click', () => {
-                this.shadow.querySelector('app-header').state.props = 'sub'
-                // const paths = ['/', '/home-page', '/demo-page'];
-                // const pathIndex = paths.indexOf(window.location.pathname) + 1
-                // window.location.pathname = pathIndex < paths.length ?  paths[pathIndex] : paths[0]
+                // this.shadow.querySelector('app-header').props.operation = 'sub'
+                const paths = ['/', '/home-page', '/demo-page'];
+                const pathIndex = paths.indexOf(window.location.pathname) + 1
+                window.location.pathname = pathIndex < paths.length ?  paths[pathIndex] : paths[0]
             })
         }
     }

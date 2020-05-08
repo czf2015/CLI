@@ -1,13 +1,12 @@
-import Component from '../../../components/Component.js'
+import { Component } from '../../../helpers.js'
 
 
 export default class Footer extends Component {
     get template() {
-        // computed
         return (
             `<div>
                 <input type="text" value="${this.state.inputVal}" />
-                <button type="button">${this.state.props/* props */}</button>
+                <button type="button">${this.props.operation}</button>
                 <ul>
                     ${this.state.list.map(item => `<li>${item}</li>`).join("")}
                 </ul>
