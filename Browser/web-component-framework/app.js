@@ -25,7 +25,7 @@ class AppContainer extends AbstractShadow {
 
     listen() {
         {   // 点击click，页面跳转
-            const paths = ['/', '/demoPage/test'];
+            const paths = ['/', '/demoPage/test']
             this.shadow.querySelector('h1').addEventListener('click', () => {             
                 const pathIndex = paths.indexOf(window.location.pathname) + 1
                 window.location.pathname = pathIndex < paths.length ?  paths[pathIndex] : paths[0]
@@ -43,4 +43,4 @@ class AppContainer extends AbstractShadow {
 }
 
 
-window.customElements.define('app-container', AppContainer);
+window.customElements.define('app-container', AppContainer)

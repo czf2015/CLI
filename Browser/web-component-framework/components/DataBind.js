@@ -8,7 +8,7 @@ export default class DataBind extends AbstractShadow {
                 <input type="text" value="${inputVal}"/>
                 <h4>${inputVal}</h4>
             </div>`
-        );
+        )
     }
 
     data() {
@@ -19,12 +19,12 @@ export default class DataBind extends AbstractShadow {
 
     listen() {
         {
-            this.inputRef = this.shadow.querySelector('input');
+            this.inputRef = this.shadow.querySelector('input')
             this.inputRef.addEventListener('keyup', (e) => {
-                this.state.inputVal = e.target.value;
-                this.inputRef.selectionStart = e.target.selectionStart;
-                this.inputRef.selectionEnd = e.target.selectionEnd;
-                this.inputRef.focus();
+                this.state.inputVal = e.target.value
+                this.inputRef.selectionStart = e.target.selectionStart
+                this.inputRef.selectionEnd = e.target.selectionEnd
+                this.inputRef.focus()
             })
         }
     }

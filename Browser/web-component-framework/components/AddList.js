@@ -33,7 +33,7 @@ export default class AddList extends AbstractShadow {
                         list: [...this.state.list, inputVal]
                     })
                 }
-            });
+            })
         }
     }
 }
