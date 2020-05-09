@@ -31,7 +31,7 @@ class AppContainer extends AbstractShadow {
                 window.location.pathname = pathIndex < paths.length ?  paths[pathIndex] : paths[0]
 
                 // 验证单向传递
-                this.shadow.querySelector('app-header').state.operation = pathIndex < paths.length ?  paths[pathIndex] : paths[0]
+                this.shadow.querySelector('app-header').props.operation = window.location.pathname
 
             })
         }
