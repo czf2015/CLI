@@ -1,4 +1,4 @@
-import { AbstractShadow } from '../core.js'
+import { AbstractShadow } from '../lib/framework/index.js'
 import './register-element.js'
 
 

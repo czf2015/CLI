@@ -1,4 +1,4 @@
-import { AbstractShadow } from '../core.js'
+import { AbstractShadow } from '../lib/framework/index.js'
 
 
 export default class AddList extends AbstractShadow {

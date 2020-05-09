@@ -1,5 +1,5 @@
 
-import { BrowserRoute, AbstractShadow } from './core.js'
+import { BrowserRoute, AbstractShadow } from './lib/framework/index.js'
 import routes from './config/routes.js'
 
 window.customElements.define('browser-route', BrowserRoute);
