@@ -4,7 +4,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "npx serve -s ."
+    "start": "npx serve -s .",
+    "directory": "mkdir config constants layouts pages components store utils apis services static test"
   },
   "author": "czf2015",
   "license": "MIT",
