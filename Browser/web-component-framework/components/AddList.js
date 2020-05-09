@@ -1,7 +1,7 @@
-import { AbstractShadow } from '../lib/framework/index.js'
+import { Component } from '../lib/framework/index.js'
 
 
-export default class AddList extends AbstractShadow {
+export default class AddList extends Component {
     render({ inputVal, list }) {
         // computed
         return (

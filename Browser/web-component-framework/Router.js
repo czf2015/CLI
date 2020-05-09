@@ -1,11 +1,11 @@
 
-import { BrowserRoute, AbstractShadow } from './lib/framework/index.js'
+import { Route, Component } from './lib/framework/index.js'
 import routes from './config/routes.js'
 
-window.customElements.define('browser-route', BrowserRoute);
+window.customElements.define('browser-route', Route);
 
 
-export default class Router extends AbstractShadow {
+export default class Router extends Component {
     render() {
         return routes
             .map(({ path, tag }) => `<browser-route path="${path}" tag="${tag}"></browser-route>`)

@@ -1,7 +1,7 @@
-import { AbstractShadow } from '../lib/framework/index.js'
+import { Component } from '../lib/framework/index.js'
 
 
-export default class DataBind extends AbstractShadow {
+export default class DataBind extends Component {
     render({ inputVal }) {
         return (
             `<div>

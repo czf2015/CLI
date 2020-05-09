@@ -1,8 +1,8 @@
-import { AbstractShadow } from '../lib/framework/index.js'
+import { Component } from '../lib/framework/index.js'
 import './register-element.js'
 
 
-class AppContainer extends AbstractShadow {
+class AppContainer extends Component {
     render() {
         return (
         `<app-header operation="add"></app-header>

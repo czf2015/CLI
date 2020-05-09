@@ -1,5 +1,5 @@
 // 双向数据绑定不适合内部嵌套其他组件的情况，当state改变时会导致嵌套的组件重新渲染
-export class AbstractShadow extends HTMLElement {
+export class Component extends HTMLElement {
     constructor() {
         super();
 
