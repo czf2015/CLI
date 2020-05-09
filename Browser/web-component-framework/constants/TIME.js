@@ -5,4 +5,5 @@ export const DAY = HOUR * 24
 export const WEEK = DAY * 7
 export const MONTH = DAY * 30
 export const YEAR = DAY * 365
-export const INTERVAL = SECOND * 3
+export const CLICK_INTERVAL = 200 // 点击间隔
+export const LOAD_TIME = 200 // 加载时长TIME
