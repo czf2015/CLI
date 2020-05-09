@@ -38,7 +38,7 @@ npm run start
 
 - components -- 通用组件
 
-- helper.js -- 基础函数
+- core.js -- 组建函数
 
 - apis -- mock接口
 

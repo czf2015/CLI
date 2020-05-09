@@ -1,4 +1,4 @@
-import { AbstractShadow } from '../tools.js'
+import { AbstractShadow } from '../core.js'
 
 
 export default class AddList extends AbstractShadow {
