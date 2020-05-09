@@ -6,4 +6,4 @@ export const WEEK = DAY * 7
 export const MONTH = DAY * 30
 export const YEAR = DAY * 365
 export const CLICK_INTERVAL = 200 // 点击间隔
-export const LOAD_TIME = 200 // 加载时长TIME
+export const LOADING_TIME = 200 // 加载时长TIME
