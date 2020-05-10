@@ -1,3 +1,5 @@
+import { integrate } from './utils.js'
+
 const h = (params, options) => {
     return options ? options : { body: JSON.stringify(params) }
 }
@@ -51,5 +53,9 @@ export class Request {
             mode: '',
             ...h(params, options)
         })
+    }
+
+    static integrate(rule, cause) {
+        return integrate(rule, cause)
     }
 }
