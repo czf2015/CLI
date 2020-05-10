@@ -32,15 +32,15 @@ export class Store {
     }
     // 
     set({ key, value }) {
-        if (typeof state[key] === 'object') {
+        if (typeof this.state[key] === 'object') {
             this.state[key] = deepCopy(value)
         } else {
-            if (typeof state[key] === typeof value) {
+            if (typeof this.state[key] === typeof value) {
                 this.state[key] = value
             } else {
                 throw new Error({
                     name: 'TypeError',
-                    message: `${value} is not ${typeof state[key]}`,
+                    message: `${value} is not ${typeof this.state[key]}`,
                     stack: `dispatch('set', ${{ [key]: value }})`
                 })
             }
@@ -48,11 +48,11 @@ export class Store {
     }
     // 
     reset(key) {
-        this.state[key] = state[key]
+        this.state[key] = this.state[key]
     }
     // 
     step({ key, value }) {
-        if (typeof state[key] === 'number' && typeof value === 'number') {
+        if (typeof this.state[key] === 'number' && typeof value === 'number') {
             this.state[key] += value
         } else {
             throw new Error({
@@ -64,7 +64,7 @@ export class Store {
     }
     // 
     toggle(key) {
-        if (typeof state[key] === 'boolean') {
+        if (typeof this.state[key] === 'boolean') {
             this.state[key] = !this.state[key]
         } else {
             throw new Error({
@@ -76,7 +76,7 @@ export class Store {
     }
     // 
     replace({ key, value }) {
-        if (typeof state[key] === 'string') {
+        if (typeof this.state[key] === 'string') {
             this.state[key] = this.state[key].replace(...value)
         } else {
             throw new Error({
@@ -88,7 +88,7 @@ export class Store {
     }
     // 
     prefix({ key, value }) {
-        if (typeof state[key] === 'string' && typeof value === 'string') {
+        if (typeof this.state[key] === 'string' && typeof value === 'string') {
             this.state[key] = value.concat(this.state[key])
         } else {
             throw new Error({
@@ -100,7 +100,7 @@ export class Store {
     }
     // 
     suffix({ key, value }) {
-        if (typeof state[key] === 'string' && typeof value === 'string') {
+        if (typeof this.state[key] === 'string' && typeof value === 'string') {
             this.state[key] = this.state[key].concat(value)
         } else {
             throw new Error({
@@ -112,8 +112,8 @@ export class Store {
     }
     // 
     slice({ key, value }) {
-        if (typeof state[key] === 'string' && typeof value === 'string' ||
-            Array.isArray(state[key])) {
+        if (typeof this.state[key] === 'string' && typeof value === 'string' ||
+            Array.isArray(this.state[key])) {
             if (Array.isArray(value)) {
                 this.state[key] = this.state[key].slice(...value)
             } else {
@@ -129,7 +129,7 @@ export class Store {
     }
     // 
     splice({ key, value }) {
-        if (Array.isArray(state[key])) {
+        if (Array.isArray(this.state[key])) {
             this.state[key].splice(...value)
         } else {
             throw new Error({
@@ -141,7 +141,7 @@ export class Store {
     }
     // 
     push({ key, value }) {
-        if (Array.isArray(state[key])) {
+        if (Array.isArray(this.state[key])) {
             if (Array.isArray(value)) {
                 this.state[key].push(...value)
             } else {
@@ -157,7 +157,7 @@ export class Store {
     }
     // 
     pop(key) {
-        if (Array.isArray(state[key])) {
+        if (Array.isArray(this.state[key])) {
             this.state[key].pop()
         } else {
             throw new Error({
@@ -169,7 +169,7 @@ export class Store {
     }
     // 
     shift(key) {
-        if (Array.isArray(state[key])) {
+        if (Array.isArray(this.state[key])) {
             this.state[key].shift()
         } else {
             throw new Error({
@@ -181,7 +181,7 @@ export class Store {
     }
     // 
     unshift({ key, value }) {
-        if (Array.isArray(state[key])) {
+        if (Array.isArray(this.state[key])) {
             if (Array.isArray(value)) {
                 this.state[key].unshift(...value)
             } else {
@@ -197,7 +197,7 @@ export class Store {
     }
     // 
     format({ key, value }) {
-        if (typeof state[key] === 'object') {
+        if (typeof this.state[key] === 'object') {
             this.state[key] = format(key, ...value)
         } else {
             throw new Error({
@@ -209,7 +209,7 @@ export class Store {
     }
     // 
     adapt({ key, value }) {
-        if (typeof state[key] === 'object') {
+        if (typeof this.state[key] === 'object') {
             this.state[key] = adapt(key, ...value)
         } else {
             throw new Error({
@@ -221,7 +221,7 @@ export class Store {
     }
     // 
     append({ key, value }) {
-        if (typeof state[key] === 'object') {
+        if (typeof this.state[key] === 'object') {
             this.state[key] = { ...this.state[key], ...value }
         } else {
             throw new Error({
@@ -233,7 +233,7 @@ export class Store {
     }
     // 
     remove({ key, value }) {
-        if (typeof state[key] === 'object') {
+        if (typeof this.state[key] === 'object') {
             delete this.state[key][value]
         } else {
             throw new Error({

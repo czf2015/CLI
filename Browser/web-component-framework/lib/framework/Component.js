@@ -31,12 +31,17 @@ export class Component extends HTMLElement {
 
         this.shadow.innerHTML = this.render(this.state);
         this.listen()
+
+        this.init()
     }
 
+    
     render(state) {}
-
+    
     data() {}
-
+    
     // 监听
     listen() {}
+
+    init() {}
 }
