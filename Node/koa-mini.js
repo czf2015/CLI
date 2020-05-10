@@ -31,7 +31,7 @@ class Application {
 
     callback() {
         return async (req, res) => {
-            const ctx = new Context(req, res)
+            const ctx = new Context(req, res) // 等价于{ req, res }
             const fn = compose(this.middlewares)
             try {
                 await fn(ctx)
