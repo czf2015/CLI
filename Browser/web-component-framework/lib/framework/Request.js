@@ -1,57 +1,57 @@
 import { integrate } from './utils.js'
 
-const h = (params, options) => {
-    return options ? options : { body: JSON.stringify(params) }
+const params = (data, options) => {
+    return options ? options : { body: JSON.stringify(data) }
 }
 
 // 请求
 export class Request {
-    static get(url, params, options) {
+    static get(url, data, options) {
         return fetch(url, {
             method: 'get',
-            headers: '',
-            mode: '',
-            cache: '',
-            credentials: '',
-            redirect: '',
-            integrity: '',
-            ...h(params, options)
+            // headers: '',
+            // mode: '',
+            // cache: '',
+            // credentials: '',
+            // redirect: '',
+            // integrity: '',
+            ...params(data, options)
         })
     }
 
-    static post(url, params, options) {
+    static post(url, data, options) {
         return fetch(url, {
             method: 'post',
-            headers: '',
-            mode: '',
-            ...h(params, options)
+            // headers: '',
+            // mode: '',
+            ...params(data, options)
         })
     }
 
-    static put(url, params, options) {
+    static put(url, data, options) {
         return fetch(url, {
             method: 'put',
-            headers: '',
-            mode: '',
-            ...h(params, options)
+            // headers: '',
+            // mode: '',
+            ...params(data, options)
         })
     }
 
-    static patch(url, params, options) {
+    static patch(url, data, options) {
         return fetch(url, {
             method: 'patch',
-            headers: '',
-            mode: '',
-            ...h(params, options)
+            // headers: '',
+            // mode: '',
+            ...params(data, options)
         })
     }
 
-    static delete(url, params, options) {
+    static delete(url, data, options) {
         return fetch(url, {
             method: 'delete',
-            headers: '',
-            mode: '',
-            ...h(params, options)
+            // headers: '',
+            // mode: '',
+            ...params(data, options)
         })
     }
 

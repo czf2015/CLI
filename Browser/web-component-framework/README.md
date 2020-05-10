@@ -45,7 +45,7 @@ npm run start
 
 - components -- 通用组件
 
-- apis -- mock接口及数据结构
+- apis -- 前端调用接口及数据结构
 
 - services -- 将后端服务统一封装成API形式的restful风格接口供前端调用
 
