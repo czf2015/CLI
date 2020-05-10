@@ -1,12 +1,14 @@
 
-import { Component } from './lib/framework/index.js'
+import { Router } from './lib/framework/index.js'
 import routes from './config/routes.js'
+import './pages/demoPage/_demo.js'
+import './pages/homePage/index.js'
 
 
-export default class Router extends Component {
-    render() {
-        return routes
-            .map(({ path, tag }) => `<browser-route path="${path}" tag="${tag}"></browser-route>`)
-            .join('')
+export default class extends Router {
+    data() {
+        return {
+            routes
+        }
     }
 }

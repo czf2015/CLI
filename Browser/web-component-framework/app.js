@@ -2,9 +2,6 @@ import { Component, customElementRegister } from '../lib/framework/index.js'
 import Header from './layouts/header/Header.js'
 import Footer from './layouts/footer/Footer.js'
 import Router from './Router.js'
-// 页面组件已经注册，只需要导入即可
-import './pages/demoPage/_demo.js'
-import './pages/homePage/index.js'
 
 
 class AppContainer extends Component {
