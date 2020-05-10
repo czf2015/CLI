@@ -13,7 +13,9 @@ npm run start
 
 ## 结构说明
 
-- index.html -- html模板
+
+- lib -- 框架库函数，最核心的部分是Component及Router，另外包含API、Store、Request、DB等的封装
+
 
 - config -- 配置文件
     |__ routes.js -- 路由配置
@@ -21,9 +23,9 @@ npm run start
 - constants -- 通用常量
     |__ 时间常量
 
-- app.js -- 入口文件
+- index.html -- html模板
 
-- register-component.js -- 最上层组件注册
+- app.js -- 入口文件
 
 - Router.js -- 前端路由
 
@@ -38,11 +40,9 @@ npm run start
 
 - components -- 通用组件
 
-- core.js -- 组建函数
+- apis -- mock接口及数据结构
 
-- apis -- mock接口
-
-- services -- 业务
+- services -- 将后端服务统一封装成API形式的restful风格接口供前端调用
 
 - store -- 数据仓库
 
