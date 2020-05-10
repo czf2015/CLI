@@ -14,8 +14,8 @@ export class Component extends HTMLElement {
         this.state = new Proxy({ ...this.data(), ...props }, {
             set: (target, key, receiver) => {
                 const retVal = Reflect.set(target, key, receiver)
-                this.shadow.innerHTML = this.render(target)
-                this.listen();
+                this.shadow.innerHTML = this.render(this.state);
+                this.listen()
                 return retVal;
             }
         })
@@ -27,12 +27,12 @@ export class Component extends HTMLElement {
                 Object.assign(this.state, target)
                 return retVal;
             }
-        })
+        })   
 
         this.shadow.innerHTML = this.render(this.state);
         this.listen()
 
-        this.init()
+        this.once()
     }
 
     
@@ -40,8 +40,9 @@ export class Component extends HTMLElement {
     
     data() {}
     
-    // 监听
+    // 每次状态更新，需要重新绑定
     listen() {}
 
-    init() {}
+    // 仅初始化完成时执行一次
+    once() {}
 }

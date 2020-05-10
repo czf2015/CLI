@@ -5,7 +5,7 @@ import store from '../../store/index.js'
 
 
 class DemoPage extends DataBind {
-    init() {
+    once() {
         {
             Request.get(ACCOUNT).then(res => {
                 console.log(res)
