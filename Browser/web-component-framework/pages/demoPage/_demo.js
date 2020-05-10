@@ -8,9 +8,9 @@ class DemoPage extends DataBind {
         {
             Request.get(ACCOUNT).then(res => {
                 console.log(res)
-                ACCOUNT.post({id: 0, username: 'c0', password: '00'})
-                    .then(({data}) => {
-                        // 
+                ACCOUNT.post({ id: 0, username: 'c0', password: '00' })
+                    .then(({ data }) => {
+                        console.log(data)
                         store.dispatch('push', { history: { title: 'demo', tag: 'demo_page', data }})
                         console.log(store.state)
                     })
