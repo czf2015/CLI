@@ -20,7 +20,7 @@ export class Component extends HTMLElement {
             }
         })
 
-        // 单向传递
+        // 单向传递 props可传递数据、函数及更复杂的对象
         this.props = new Proxy(props, {
             set: (target, key, receiver) => {
                 const retVal = Reflect.set(target, key, receiver)
