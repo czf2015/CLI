@@ -2,6 +2,7 @@ import { Component, customElementRegister } from '../lib/framework/index.js'
 import Header from './layouts/header/Header.js'
 import Footer from './layouts/footer/Footer.js'
 import Router from './Router.js'
+
 import './pages/demoPage/_demo.js'
 import './pages/homePage/index.js'
 
