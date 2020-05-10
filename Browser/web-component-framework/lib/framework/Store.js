@@ -1,5 +1,6 @@
 import { format, adapt, deepCopy, keyValue, keyValues } from './utils.js'
 
+// 状态管理
 export class Store {
     constructor(state) {
         this.state = {...state}
