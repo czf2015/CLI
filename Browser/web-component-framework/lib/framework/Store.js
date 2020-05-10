@@ -1,6 +1,5 @@
 import { format, adapt, deepCopy, keyValue, keyValues } from './utils.js'
 
-
 export class Store {
     constructor(state) {
         this.state = {...state}
