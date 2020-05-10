@@ -3,8 +3,9 @@ import DataBind from '../../components/DataBind.js'
 import { ACCOUNT } from '../../apis/index.js'
 import store from '../../store/index.js'
 
+
 class DemoPage extends DataBind {
-    listen() {
+    init() {
         {
             Request.get(ACCOUNT).then(res => {
                 console.log(res)
