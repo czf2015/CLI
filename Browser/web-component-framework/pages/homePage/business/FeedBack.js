@@ -1,3 +1,6 @@
-import FeedBack from '../../../components/DataBind.js'
+import DataBind from '../../../components/DataBind.js';
 
-export default FeedBack
+
+export default class FeedBack extends DataBind {
+
+}

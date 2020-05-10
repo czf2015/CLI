@@ -1,3 +1,6 @@
-import TodoList from '../../../components/AddList.js'
+import AddList from '../../../components/AddList.js';
 
-export default TodoList
+
+export default class TodoList extends AddList {
+
+}
