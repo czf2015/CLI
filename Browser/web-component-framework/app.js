@@ -1,5 +1,9 @@
-import { Component } from '../lib/framework/index.js'
-import './register-element.js'
+import { Component, customElementRegister } from '../lib/framework/index.js'
+import Header from './layouts/header/Header.js'
+import Footer from './layouts/footer/Footer.js'
+import Router from './Router.js'
+import './pages/demoPage/_demo.js'
+import './pages/homePage/index.js'
 
 
 class AppContainer extends Component {
@@ -42,5 +46,9 @@ class AppContainer extends Component {
     }
 }
 
-
-window.customElements.define('app-container', AppContainer)
+customElementRegister({
+    'app-container': AppContainer,
+    'app-header': Header,
+    'app-footer': Footer,
+    'app-router': Router,
+})

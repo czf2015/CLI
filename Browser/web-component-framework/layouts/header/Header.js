@@ -1,7 +1,7 @@
 import { Component } from '../../lib/framework/index.js'
 
 
-export default class Footer extends Component {
+export default class Header extends Component {
     render({ inputVal, list, operation }) {
         return (
             `<div>
