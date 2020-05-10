@@ -1,7 +1,7 @@
-import { Component } from '../../lib/framework/index.js'
+import AddList from '../../components/AddList.js'
 
 
-export default class Header extends Component {
+export default class Header extends AddList {
     render({ inputVal, list, operation }) {
         return (
             `<div>
@@ -12,26 +12,5 @@ export default class Header extends Component {
                 </ul>
             </div>`
         )
-    }
-
-    data() {
-        return {
-            inputVal: '',
-            list: [],
-        }
-    }
-
-    listen() {
-        {   // comments
-            this.inputRef = this.shadow.querySelector("input")
-            this.shadow.querySelector("button").addEventListener("click", () => {
-                if (this.inputRef.value) {
-                    Object.assign(this.state, {
-                        inputVal: this.inputRef.value, 
-                        list: [...this.state.list, this.inputRef.value]
-                    })
-                }
-            })
-        }
     }
 }

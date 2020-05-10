@@ -15,8 +15,7 @@ class AppContainer extends Component {
             <h1>Click Me!</h1>
             <app-router></app-router>
         </main>
-        <app-footer></app-footer>
-        
+        <app-footer></app-footer>        
         
         <style>
             .app-container > h1 {
