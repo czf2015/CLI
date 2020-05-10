@@ -1,6 +1,6 @@
 const h = (handle, params) => Array.isArray(params) ? params.map(handle) : handle(params)
 
-
+// 接口
 export class API {
     constructor(Model, list = []) {
         this.Model = Model
@@ -8,7 +8,7 @@ export class API {
     }
 
     // @params undefined | Array | Object
-    GET(params) {
+    get(params) {
         const res = {
             statusCode: 200,
             errMsg: '',
@@ -30,7 +30,7 @@ export class API {
     }
 
     // @params Array | Object
-    POST(params) {
+    post(params) {
         const res = {
             statusCode: 200,
             errMsg: '',
@@ -59,7 +59,7 @@ export class API {
     }
 
     // @params undefined | Array | Object
-    DELETE(params) {
+    delete(params) {
         const res = {
             statusCode: 200,
             errMsg: '',
@@ -83,7 +83,7 @@ export class API {
     }
 
     // @params Array | Object
-    PUT(params) {
+    put(params) {
         const res = {
             statusCode: 200,
             errMsg: '',
@@ -112,7 +112,7 @@ export class API {
     }
     
     // @params Array | Object
-    PATCH(params) {
+    patch(params) {
         const res = {
             statusCode: 200,
             errMsg: '',
