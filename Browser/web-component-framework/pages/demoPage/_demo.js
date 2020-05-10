@@ -6,7 +6,7 @@ import store from '../../store/index.js'
 
 
 class DemoPage extends DataBind {
-    once() {
+    async once() {
         {
             ACCOUNT.get().then(res => {
                 console.log(res)
@@ -18,10 +18,13 @@ class DemoPage extends DataBind {
                     })
             })
         }
-        // {
-        //     const db = new IndexedDB('test',"test", 1)
-        //     db.set('test', { test: 0 })
-        // }
+        {
+            const db = new DB('test', 1)
+            db.initDB()
+            setTimeout(async () => {
+                await db.insert('test1', 'data1')
+            }, 200)
+        }
         {
             Request.get('wwww.baidu.com').then(console.log)
         }

@@ -1,23 +1,232 @@
-// 可用于API中的数据存储
+// docs: https://wangdoc.com/javascript/bom/indexeddb.html
+
 export class DB {
-    // 创建新数据库
-    constructor(dbName) {
+    constructor(dbName, dbVersion) {
+        this.dbName = dbName
+        this.dbVersion = dbVersion
+        this.indexedDB = window.indexedDB || window.webkitindexedDB || window.msIndexedDB || window.mozIndexedDB
     }
-    // 查表
-    async find(table, prerequisite = {}, skip = 0, limit = 10, sort = {}) {
+    // 
+    async initDB() {
+        const request = this.indexedDB.open(this.dbName, this.dbVersion);
+        request.onerror = function () {
+            console.log("打开数据库失败");
+        };
+        request.onsuccess = function () {
+            console.log("打开数据库成功");
+        };
+        request.onupgradeneeded = (event) => {
+            const db = event.target.result;
+            for (let t in this.store) {
+                if (!db.objectStoreNames.contains(this.store[t].name)) {
+                    const objectStore = db.createObjectStore(this.store[t].name, {
+                        keyPath: this.store[t].key,
+                        autoIncrement: true
+                    });
+                    for (let i = 0; i < this.store[t].cursorIndex.length; i++) {
+                        const element = this.store[t].cursorIndex[i];
+                        objectStore.createIndex(element.name, element.name, {
+                            unique: element.unique
+                        });
+                    }
+                }
+            }
+        };
+    }
+    // 打开数据库
+    openDB() {
+        return new Promise((resolve, reject) => {
+            const request = this.indexedDB.open(this.dbName, this.dbVersion);
+
+            request.onerror = function (event) {
+                reject("IndexedDB数据库打开错误，" + event);
+            };
+            request.onsuccess = function (event) {
+                resolve(event.target.result);
+            };
+        });
+    }
+    // 删除表
+    deleteDB(table) {
+        const deleteQuest = this.indexedDB.deleteDatabase(table);
+        deleteQuest.onerror = function () {
+            return Promise.resolve(false);
+        };
+        deleteQuest.onsuccess = function () {
+            return Promise.resolve(true);
+        };
+    }
+    // 关闭数据库
+    async closeDB(db) {
         try {
-            return await table.find(prerequisite).skip(skip).limit(limit).sort(sort)
-        } catch (e) {
-            throw(e)
+            let d;
+            if (!db) {
+                d = await this.openDB();
+            }
+            const closeQuest = d.closeDB();
+            return new Promise(resolve => {
+                closeQuest.onerror = function () {
+                    resolve(false);
+                };
+                closeQuest.onsuccess = function () {
+                    resolve(true);
+                };
+            });
+        } catch (error) {
+            return Promise.resolve(false);
         }
     }
-    async findOne(table, prerequisite) { }
-    async findAll(table, prerequisite) { }
-    // 增表
-    async insert(table, value) { }
-    // 更新表
-    async update(table, newVal, prerequisite) { }
-    // 删除表
-    async delete(table, prerequisite) { }
-    async clear(table) {}
+    // 添加数据，add添加新值
+    async insert(table, data) {
+        try {
+            const db = await this.openDB();
+            const request = db
+                .transaction(table.name, "readwrite")
+                .objectStore(table.name)
+                .add(data);
+
+            return new Promise((resolve, reject) => {
+                request.onerror = function () {
+                    reject("添加数据出错");
+                };
+                request.onsuccess = function () {
+                    resolve(true);
+                };
+            });
+        } catch (error) {
+            console.log(error);
+            return Promise.resolve(false);
+        }
+    }
+    // 更新
+    async update(table, data) {
+        try {
+            const db = await this.openDB();
+            const request = db
+                .transaction(table.name, "readwrite")
+                .objectStore(table.name)
+                .put(data);
+            return new Promise(resolve => {
+                request.onerror = function () {
+                    resolve(false);
+                };
+                request.onsuccess = function () {
+                    resolve(true);
+                };
+            });
+        } catch (error) {
+            return Promise.resolve(false);
+        }
+    }
+    // 删除数据
+    async delete(table, keyValue) {
+        try {
+            const db = await this.openDB();
+            const request = db
+                .transaction(table.name, "readwrite")
+                .objectStore(table.name)
+                .delete(keyValue);
+            return new Promise(resolve => {
+                request.onerror = function () {
+                    resolve(false);
+                };
+                request.onsuccess = function () {
+                    resolve(true);
+                };
+            });
+        } catch (error) {
+            return Promise.resolve(false);
+        }
+    }
+    // 清空数据
+    async clear(table) {
+        const db = await this.openDB();
+        const store = db.transaction(table.name, "readwrite").objectStore(table.name);
+        store.clear();
+    }
+    // 查询数据 表名 索引值 索引 key  没有value key为key 而不是索引
+    async get(table, keyValue, indexCursor) {
+        try {
+            const db = await this.openDB();
+            const store = db
+                .transaction(table.name, "readonly")
+                .objectStore(table.name);
+            const request = !keyValue
+                ? store.openCursor()
+                : indexCursor
+                    ? store.index(indexCursor).get(keyValue)
+                    : store.get(keyValue);
+            const data = [];
+            return new Promise(resolve => {
+                request.onerror = function () {
+                    resolve("查询数据失败");
+                };
+                request.onsuccess = function (event) {
+                    if (!keyValue && !indexCursor) {
+                        if (event.target.result) {
+                            data.push(event.target.result.value);
+                            event.target.result.continue();
+                        } else {
+                            resolve(data);
+                        }
+                    } else {
+                        resolve([event.target.result]);
+                    }
+                };
+            });
+        } catch (error) {
+            return Promise.reject(error);
+        }
+    }
+    // 通过游标操作数据, callback中要有游标移动方式
+    async handleDataByCursor(table, keyRange) {
+        try {
+            const kRange = keyRange || "";
+            const db = await this.openDB();
+            const store = db.transaction(table, "readwrite").objectStore(table)
+            const request = store.openCursor(kRange);
+            return new Promise(resolve => {
+                request.onerror = function () {
+                    resolve("通过游标获取数据报错");
+                };
+                request.onsuccess = function (event) {
+                    const cursor = event.target.result;
+                    resolve(cursor);
+                };
+            });
+        } catch (error) {
+            return Promise.reject(error);
+        }
+    }
+    // 通过索引游标操作数据, callback中要有游标移动方式
+    async handleDataByIndex(table, keyRange, sursorIndex) {
+        try {
+            const kRange = keyRange || "";
+            const db = await this.openDB();
+            const store = db.transaction(table, "readwrite").objectStore(table)
+            const request = store.index(sursorIndex).openCursor(kRange);
+            return new Promise(resolve => {
+                request.onerror = function () {
+                    resolve("通过索引游标获取数据报错");
+                };
+                request.onsuccess = function (event) {
+                    const cursor = event.target.result;
+                    if (cursor) {
+                        resolve(cursor);
+                    }
+                };
+            });
+        } catch (error) {
+            return Promise.reject(error);
+        }
+    }
+    // 创建游标索引
+    async createCursorIndex(table, cursorIndex, unique) {
+        const db = await this.openDB();
+        const store = db.transaction(table, "readwrite").objectStore(table);
+        store.createIndex(cursorIndex, cursorIndex, {
+            unique: unique
+        });
+        return Promise.resolve();
+    }
 }
