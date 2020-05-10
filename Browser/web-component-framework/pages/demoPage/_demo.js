@@ -1,4 +1,4 @@
-import { customElementRegister, Request } from '../../lib/framework/index.js'
+import { customElementRegister } from '../../lib/framework/index.js'
 import DataBind from '../../components/DataBind.js'
 import { ACCOUNT } from '../../apis/index.js'
 import store from '../../store/index.js'
@@ -7,7 +7,7 @@ import store from '../../store/index.js'
 class DemoPage extends DataBind {
     once() {
         {
-            Request.get(ACCOUNT).then(res => {
+            ACCOUNT.get().then(res => {
                 console.log(res)
                 ACCOUNT.post({ id: 0, username: 'c0', password: '00' })
                     .then(({ data }) => {

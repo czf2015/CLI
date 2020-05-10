@@ -1,18 +1,55 @@
+const h = (params, options) => {
+    return options ? options : { body: JSON.stringify(params) }
+}
+
 // 请求
 export class Request {
-    static get(api, params) {
-        return api.get(params)
+    static get(url, params, options) {
+        return fetch(url, {
+            method: 'get',
+            headers: '',
+            mode: '',
+            cache: '',
+            credentials: '',
+            redirect: '',
+            integrity: '',
+            ...h(params, options)
+        })
     }
-    static post(api, params) {
-        return api.post(params)
+
+    static post(url, params, options) {
+        return fetch(url, {
+            method: 'post',
+            headers: '',
+            mode: '',
+            ...h(params, options)
+        })
     }
-    static put(api, params) {
-        return api.put(params)
+
+    static put(url, params, options) {
+        return fetch(url, {
+            method: 'put',
+            headers: '',
+            mode: '',
+            ...h(params, options)
+        })
     }
-    static patch(api, params) {
-        return api.patch(params)
+
+    static patch(url, params, options) {
+        return fetch(url, {
+            method: 'patch',
+            headers: '',
+            mode: '',
+            ...h(params, options)
+        })
     }
-    static delete(api, params) {
-        return api.delete(params)
+
+    static delete(url, params, options) {
+        return fetch(url, {
+            method: 'delete',
+            headers: '',
+            mode: '',
+            ...h(params, options)
+        })
     }
 }
