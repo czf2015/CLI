@@ -10,11 +10,13 @@ export default class extends Router {
             routes: [
                 {
                     path: '/',
-                    tag: 'home-page'
+                    tag: 'home-page',
+                    title: '首页'
                 },
                 {
                     path: '/demoPage/:demo',
-                    tag: 'demo-page'
+                    tag: 'demo-page',
+                    title: 'demo'
                 },
             ]
         }
