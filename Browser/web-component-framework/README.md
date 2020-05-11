@@ -19,7 +19,7 @@ npm run start
 ## 结构说明
 
 
-- lib -- 框架库函数，最核心的部分是Component及Router，另外包含API、Request、DB、Store等类的封装
+- lib -- 框架库函数，[最核心的部分](./lib/framework/index.mjs)是Component及Router，另外包含API、Request、DB、Store等类的封装
 
 
 - config -- 配置文件

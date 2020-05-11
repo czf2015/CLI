@@ -31,18 +31,14 @@ export class Component extends HTMLElement {
 
         this.shadow.innerHTML = this.render(this.state);
         this.listen()
-
         this.once()
     }
-
     
     render(state) {}
-    
-    data() {}
-    
+
+    data() {}   
     // 每次状态更新，需要重新绑定
     listen() {}
-
     // 仅初始化完成时执行一次
     once() {}
 }
@@ -54,17 +50,10 @@ export function customElementRegister(customs) {
 function isRoute(path) {
     const paths = (window.location.pathname || '/').split('/')
     const slugs = path.split('/')
-    if (slugs.length !== paths.length) {
-        return false
-    }
+    if (slugs.length !== paths.length) return false
     for (let i = 0; i < slugs.length; i++) {
-        if (slugs[i].includes(':')) {
-            return true
-        } else {
-            if (slugs[i] !== paths[i]) {
-                return false
-            }
-        }
+        if (slugs[i].includes(':')) return true
+        if (slugs[i] !== paths[i]) return false
     }
     return true
 }
