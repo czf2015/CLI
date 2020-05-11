@@ -41,6 +41,10 @@ export class Component extends HTMLElement {
     listen() {}
     // 仅初始化完成时执行一次
     once() {}
+
+    $(selector) {
+        return this.shadow.querySelector(selector)
+    }
 }
 
 export function customElementRegister(customs) {

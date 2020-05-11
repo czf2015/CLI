@@ -19,7 +19,7 @@ export default class DataBind extends Component {
 
     listen() {
         {
-            this.inputRef = this.shadow.querySelector('input')
+            this.inputRef = this.$('input')
             this.inputRef.addEventListener('keyup', (e) => {
                 this.state.inputVal = e.target.value
                 this.inputRef.selectionStart = e.target.selectionStart

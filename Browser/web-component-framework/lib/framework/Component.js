@@ -45,4 +45,8 @@ export class Component extends HTMLElement {
 
     // 仅初始化完成时执行一次
     once() {}
+
+    $(selector) {
+        return this.shadow.querySelector(selector)
+    }
 }

@@ -24,8 +24,8 @@ export default class AddList extends Component {
 
     listen() {
         {   // comments
-            this.inputRef = this.shadow.querySelector("input");
-            this.shadow.querySelector("button").addEventListener("click", () => {
+            this.inputRef = this.$("input");
+            this.$("button").addEventListener("click", () => {
                 const inputVal = this.inputRef.value || this.inputRef.placeholder
                 if (inputVal) {
                     Object.assign(this.state, {
