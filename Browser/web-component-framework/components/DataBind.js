@@ -1,4 +1,4 @@
-import { Component } from '../lib/framework/index.js'
+import { Component } from '../lib/framework/index.mjs'
 
 
 export default class DataBind extends Component {
