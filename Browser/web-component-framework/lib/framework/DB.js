@@ -75,34 +75,44 @@ export class DB {
     async create(table, option) {
         try {
             const request = this.indexedDB.open(this.dbName, this.dbVersion);
-            request.onerror = function () {
-                console.log("打开数据库失败");
-            };
+            
+            return new Promise((resolve, reject) => {
+                request.onerror = function (error) {
+                    console.log("打开数据库失败");
+                    reject(error)
+                };
 
-            request.onupgradeneeded = function () {
-                const db = event.target.result;
-                if (!db.objectStoreNames.contains(table)) {
-                    const objectStore = db.createObjectStore(table, {
-                        keyPath: option.key,
-                        autoIncrement: true
-                    });
-                    if (option.index) {
-                        if (Array.isArray(option.index) && option.index.length > 0) {
-                            for (let i = 0; i < option.index.length; i++) {
-                                const index = option.index[i];
-                                // 参数：索引名称、索引所在的属性、配置对象（说明该属性是否包含重复的值）
-                                objectStore.createIndex(index.key, index.key, {
-                                    unique: index.unique
+                request.onsuccess = function () {
+                    console.log("打开数据库成功");
+                };
+
+                request.onupgradeneeded = function (event) {
+                    console.log('create table')
+                    const db = event.target.result;
+                    if (!db.objectStoreNames.contains(table)) {
+                        const objectStore = db.createObjectStore(table, {
+                            keyPath: option.key,
+                            autoIncrement: true
+                        });
+                        if (option.index) {
+                            if (Array.isArray(option.index) && option.index.length > 0) {
+                                for (let i = 0; i < option.index.length; i++) {
+                                    const index = option.index[i];
+                                    // 参数：索引名称、索引所在的属性、配置对象（说明该属性是否包含重复的值）
+                                    objectStore.createIndex(index.key, index.key, {
+                                        unique: index.unique
+                                    });
+                                }
+                            } else {
+                                objectStore.createIndex(option.index.key, option.index.key, {
+                                    unique: option.index.unique
                                 });
                             }
-                        } else {
-                            objectStore.createIndex(option.index.key, option.index.key, {
-                                unique: option.index.unique
-                            });
                         }
                     }
-                }
-            };
+                    resolve(table)
+                };
+            })
         } catch (error) {
             console.log(error);
             return Promise.resolve(false);
@@ -146,6 +156,7 @@ export class DB {
     async insert(table, data) {
         try {
             const db = await this.openDB();
+
             const request = db
                 .transaction(table, "readwrite")
                 .objectStore(table)
