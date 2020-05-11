@@ -1,3 +1,6 @@
+import './pages/demoPage/_demo.js'
+import './pages/homePage/index.js'
+
 export default [
     {
         path: '/',
