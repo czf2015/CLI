@@ -2,7 +2,8 @@
 
 export class DB {
     constructor(dbName, dbVersion) {
-        this.indexedDB = window.indexedDB || window.webkitindexedDB || window.msIndexedDB || window.mozIndexedDB
+        /* 对不同浏览器的indexedDB进行兼容 */
+        this.indexedDB = window.indexedDB || window.webkitindexedDB || window.mozIndexedDB || window.msIndexedDB
         this.dbName = dbName
         this.dbVersion = dbVersion
         this.store = {
@@ -36,9 +37,10 @@ export class DB {
                         autoIncrement: true
                     });
                     for (let i = 0; i < this.store[tb].cursorIndex.length; i++) {
-                        const element = this.store[tb].cursorIndex[i];
-                        objectStore.createIndex(element.name, element.name, {
-                            unique: element.unique
+                        const cursorIndex = this.store[tb].cursorIndex[i];
+                        // 参数：索引名称、索引所在的属性、配置对象（说明该属性是否包含重复的值）
+                        objectStore.createIndex(cursorIndex.name, cursorIndex.name, {
+                            unique: cursorIndex.unique
                         });
                     }
                 }
@@ -47,9 +49,8 @@ export class DB {
     }
     // 打开数据库
     openDB() {
+        const request = this.indexedDB.open(this.dbName, this.dbVersion);
         return new Promise((resolve, reject) => {
-            const request = this.indexedDB.open(this.dbName, this.dbVersion);
-
             request.onerror = function (event) {
                 reject("IndexedDB数据库打开错误，" + event);
             };
@@ -88,12 +89,12 @@ export class DB {
         };
     }
     // 查询数据 表名 索引值 索引 key  没有value key为key 而不是索引
-    async get(table, keyValue, indexCursor) {
+    async find(table, keyValue, indexCursor) {
         try {
             const db = await this.openDB();
             const store = db
-                .transaction(table.name, "readonly")
-                .objectStore(table.name);
+                .transaction([table], "readonly")
+                .objectStore(table);
             const request = !keyValue
                 ? store.openCursor()
                 : indexCursor
@@ -126,8 +127,8 @@ export class DB {
         try {
             const db = await this.openDB();
             const request = db
-                .transaction(table.name, "readwrite")
-                .objectStore(table.name)
+                .transaction([table], "readwrite")
+                .objectStore(table)
                 .add(data);
 
             return new Promise((resolve, reject) => {
@@ -148,8 +149,8 @@ export class DB {
         try {
             const db = await this.openDB();
             const request = db
-                .transaction(table.name, "readwrite")
-                .objectStore(table.name)
+                .transaction([table], "readwrite")
+                .objectStore(table)
                 .put(data);
             return new Promise(resolve => {
                 request.onerror = function () {
@@ -168,8 +169,8 @@ export class DB {
         try {
             const db = await this.openDB();
             const request = db
-                .transaction(table.name, "readwrite")
-                .objectStore(table.name)
+                .transaction([table], "readwrite")
+                .objectStore(table)
                 .delete(keyValue);
             return new Promise(resolve => {
                 request.onerror = function () {
@@ -186,7 +187,7 @@ export class DB {
     // 清空数据
     async clear(table) {
         const db = await this.openDB();
-        const store = db.transaction(table.name, "readwrite").objectStore(table.name);
+        const store = db.transaction([table], "readwrite").objectStore(table);
         store.clear();
     }
 
@@ -195,7 +196,7 @@ export class DB {
         try {
             const kRange = keyRange || "";
             const db = await this.openDB();
-            const store = db.transaction(table, "readwrite").objectStore(table)
+            const store = db.transaction([table], "readwrite").objectStore(table)
             const request = store.index(sursorIndex).openCursor(kRange);
             return new Promise(resolve => {
                 request.onerror = function () {
@@ -217,7 +218,7 @@ export class DB {
         try {
             const kRange = keyRange || "";
             const db = await this.openDB();
-            const store = db.transaction(table, "readwrite").objectStore(table)
+            const store = db.transaction([table], "readwrite").objectStore(table)
             const request = store.openCursor(kRange);
             return new Promise(resolve => {
                 request.onerror = function () {
@@ -235,7 +236,7 @@ export class DB {
     // 创建游标索引
     async createCursorIndex(table, cursorIndex, unique) {
         const db = await this.openDB();
-        const store = db.transaction(table, "readwrite").objectStore(table);
+        const store = db.transaction([table], "readwrite").objectStore(table);
         store.createIndex(cursorIndex, cursorIndex, {
             unique: unique
         });
