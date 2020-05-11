@@ -1,4 +1,4 @@
-import { Component, customElementRegister } from '../../lib/framework/index.js'
+import { Component, customElementRegister } from '../../lib/framework/index.mjs'
 import TodoList from './business/TodoList.js'
 import FeedBack from './business/FeedBack.js'
 
