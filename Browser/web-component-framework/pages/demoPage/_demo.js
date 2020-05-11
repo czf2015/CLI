@@ -19,11 +19,9 @@ class DemoPage extends DataBind {
             })
         }
         {
-            const db = new DB('test1', 2)
+            const db = new DB('test1', 4)
             await db.create("test1", { key: "id", index: [{ key: 'czf', unique: false }] })
-            await db.insert("test1", { czf: 'czf1'})
-            setTimeout(async () => {
-            }, 200)
+            await db.insert("test1", { czf: 'czf2'})
         }
         {
             Request.get('wwww.baidu.com').then(console.log)
