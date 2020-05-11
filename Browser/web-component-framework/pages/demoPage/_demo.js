@@ -19,10 +19,9 @@ class DemoPage extends DataBind {
             })
         }
         {
-            const db = new DB('test', 1)
-            db.initDB()
+            const db = new DB('test1', 1)
+            await db.create("test1", { key: "id", index: [{ key: 'czf', unique: true }] })
             setTimeout(async () => {
-                await db.create({ name: "test1", index: [{ key: 'czf', unique: true }] })
                 await db.insert("test1", { czf: 'czf1'})
             }, 200)
         }

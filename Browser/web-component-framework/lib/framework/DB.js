@@ -72,31 +72,37 @@ export class DB {
         };
     }
     // 创建表
-    async create(store) {
+    async create(table, option) {
         try {
-            const db = await this.openDB();
+            const request = this.indexedDB.open(this.dbName, this.dbVersion);
+            request.onerror = function () {
+                console.log("打开数据库失败");
+            };
 
-            if (!db.objectStoreNames.contains(store.name)) {
-                const objectStore = db.createObjectStore(store.name, {
-                    keyPath: store.key,
-                    autoIncrement: true
-                });
-                if (store.index) {
-                    if (Array.isArray(store.index) && store.index.length > 0) {
-                        for (let i = 0; i < store.index.length; i++) {
-                            const index = store.index[i];
-                            // 参数：索引名称、索引所在的属性、配置对象（说明该属性是否包含重复的值）
-                            objectStore.createIndex(index.key, index.key, {
-                                unique: index.unique
+            request.onupgradeneeded = function () {
+                const db = event.target.result;
+                if (!db.objectStoreNames.contains(table)) {
+                    const objectStore = db.createObjectStore(table, {
+                        keyPath: option.key,
+                        autoIncrement: true
+                    });
+                    if (option.index) {
+                        if (Array.isArray(option.index) && option.index.length > 0) {
+                            for (let i = 0; i < option.index.length; i++) {
+                                const index = option.index[i];
+                                // 参数：索引名称、索引所在的属性、配置对象（说明该属性是否包含重复的值）
+                                objectStore.createIndex(index.key, index.key, {
+                                    unique: index.unique
+                                });
+                            }
+                        } else {
+                            objectStore.createIndex(option.index.key, option.index.key, {
+                                unique: option.index.unique
                             });
                         }
-                    } else {
-                        objectStore.createIndex(store.index.key, store.index.key, {
-                            unique: store.index.unique
-                        });
                     }
                 }
-            }
+            };
         } catch (error) {
             console.log(error);
             return Promise.resolve(false);
