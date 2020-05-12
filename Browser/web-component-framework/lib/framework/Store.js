@@ -1,11 +1,18 @@
-import { format, adapt, deepCopy, keyValue, keyValues } from './utils.js'
+import { format, adapt, deepCopy, keyValue, keyValues, isType, typeMeta } from './utils.js'
 
 // 状态管理
 export class Store {
     constructor(state) {
-        this.state = {...state}
+        this.state = { ...state }
         this.records = {}
+        this.init()
     }
+
+    init() {
+        Object.keys(this.state)
+            .forEach(key => state[key] = typeMeta(this.state[key]))
+    }
+
     // 
     dispatch(action, payload) {
         if (typeof payload === 'object') {

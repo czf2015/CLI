@@ -11,3 +11,4 @@ export default new Store({
   entertainment,
   history,
 })
+

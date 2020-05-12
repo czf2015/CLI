@@ -1,9 +1,21 @@
 // 历史记录
 export default [
     {
-        title: '首页',
-        path: '/',
-        slug: 'home-page',
-        data: {}
+        title: {
+            type: 'string',
+            default: '首页',
+            required: true
+        },
+        path: {
+            type: 'string',
+            default: '/',
+            required: true
+        },
+        slug: {
+            type: 'string',
+            default: 'homePage',
+            required: true
+        },
+        data: 'object' // type
     }
 ]

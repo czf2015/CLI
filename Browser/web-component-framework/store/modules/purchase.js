@@ -1,5 +1,5 @@
 export default {
-    price: 0,
-    count: 0,
-    time: new Date()
+    price: 'number', // type
+    count: 'number', // type
+    time: Date
 }
