@@ -6,6 +6,10 @@ export class User extends Service {
         return `${options} is special`
     }
 
+    async post(params) {
+        return this.db.insert(this.table, params)
+    }
+
     patch(params) {
         return `局部更新${params}`
     }

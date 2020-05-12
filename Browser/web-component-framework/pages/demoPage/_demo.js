@@ -1,4 +1,4 @@
-import { customElementRegister, DB, Request } from '../../lib/framework/index.js'
+import { customElementRegister } from '../../lib/framework/index.js'
 import DataBind from '../../components/DataBind.js'
 import { ACCOUNT } from '../../config/apis.js'
 import store from '../../store/index.js'
@@ -16,14 +16,6 @@ class DemoPage extends DataBind {
                         console.log(store.state)
                     })
             })
-        }
-        {
-            const db = new DB('test1', 4)
-            await db.create("test1", { key: "id", index: [{ key: 'czf', unique: false }] })
-            await db.insert("test1", { czf: 'czf2'})
-        }
-        {
-            Request.get('wwww.baidu.com').then(console.log)
         }
     }
 }

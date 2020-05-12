@@ -2,10 +2,10 @@ import { API } from '../lib/framework/index.js'
 import * as models from '../models/index.js'
 import * as services from '../services/index.js'
 
-const configure = (path, Creator) => {
+const configure = (api, Creator) => {
     const Model = models[Creator]
     const Service = services[Creator]
-    return Service ? new Service(path, Model) : new API(Model)
+    return Service ? new Service(api, Model) : new API(Model)
 }
 
 

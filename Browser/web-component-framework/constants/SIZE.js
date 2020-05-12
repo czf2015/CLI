@@ -9,12 +9,15 @@ export const MD_ICON_SIZE = 48 * 48
 export const LG_ICON_SIZE = 96 * 96
 export const ICON_SIZE = MD_ICON_SIZE
 
-export const XS_WIDTH = 320
-export const SM_WIDTH = 640
-export const MD_WIDTH = 960
-export const LG_WIDTH = 1280
-export const XL_WIDTH = 1600
-export const WIDTH = MD_WIDTH
+export const WIDTH = 24 * 50 // 2 3 4 5 6 8 10 12 15 16 18 20 24 25 30 32 40 48 50
+
+export const XS = 24 * 15 // 2 3 4 5 6 8 10 12 15 20 24 30 40
+export const SM = 24 * 30
+export const MD = 24 * 45
+export const LG = 24 * 60
+export const XL = 24 * 75
+
+export const WIDTH = MD
 
 export const COLUMNS_1 = 1
 export const COLUMNS_2 = 2
