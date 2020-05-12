@@ -13,7 +13,6 @@ export class DB {
     constructor(dbName, dbVersion) {
         this.dbName = dbName
         this.dbVersion = dbVersion
-        this.openDB()
     }
     // 
     async getObjectStore(table, permission = 'readonly', db = undefined) {
