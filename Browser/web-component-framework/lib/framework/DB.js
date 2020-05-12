@@ -29,7 +29,7 @@ export class DB {
         }
     }
     // 
-    async acquiesce(request, tip) {
+    async acquiesce(request, tip, upgradeHandler = noop) {
         return new Promise((resolve, reject) => {
             request.onerror = (error) => {
                 console.error(error)
@@ -39,32 +39,21 @@ export class DB {
                 console.info(`${tip}成功`)
                 resolve(event.target.result);
             };
-        })
-    }
-    // 打开数据库
-    async openDB(upgradeHandler = noop) {
-        return new Promise((resolve, reject) => {
-            const request = indexedDB.open(this.dbName, this.dbVersion);
-            request.onerror = (error) => {
-                console.error(error);
-                reject(error)
-            };
-            request.onsuccess = (event) => {
-                console.info('open DB success');
-                resolve(event.target.result)
-            };
             request.onupgradeneeded = (event) => {
                 console.info(`DB version changed to ${this.dbVersion}`);
                 upgradeHandler(event.target.result)
             };
         })
     }
+    // 打开数据库
+    async openDB(upgradeHandler = noop) {
+        const request = indexedDB.open(this.dbName, this.dbVersion);
+        return this.acquiesce(request, 'open DB', upgradeHandler)
+    }
     // 删除
     async deleteDB() {
-        return new Promise((resolve, reject) => {
-            const deleteQuest = indexedDB.deleteDatabase(this.dbName);
-            return this.acquiesce(deleteQuest, 'delete DB sucess')
-        })
+        const deleteQuest = indexedDB.deleteDatabase(this.dbName);
+        return this.acquiesce(deleteQuest, 'delete DB sucess')
     }
     // 关闭数据库
     async closeDB() {
