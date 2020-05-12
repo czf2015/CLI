@@ -2,7 +2,6 @@ import { customElementRegister, DB, Request } from '../../lib/framework/index.js
 import DataBind from '../../components/DataBind.js'
 import { ACCOUNT } from '../../config/apis.js'
 import store from '../../store/index.js'
-// import IndexedDB from '../../test/indexedDB_2.js'
 
 
 class DemoPage extends DataBind {
