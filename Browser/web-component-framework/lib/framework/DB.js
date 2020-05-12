@@ -30,7 +30,7 @@ export class DB {
         }
     }
     // 
-    async handleRequest(request, tip) {
+    async acquiesce(request, tip) {
         return new Promise((resolve, reject) => {
             request.onerror = (error) => {
                 console.error(error)
@@ -64,7 +64,7 @@ export class DB {
     async deleteDB() {
         return new Promise((resolve, reject) => {
             const deleteQuest = indexedDB.deleteDatabase(this.dbName);
-            return this.handleRequest(deleteQuest, 'delete DB sucess')
+            return this.acquiesce(deleteQuest, 'delete DB sucess')
         })
     }
     // 关闭数据库
@@ -150,7 +150,7 @@ export class DB {
         const request = multiple
             ? objectStore[method](...params)
             : objectStore[method](params)
-        return this.handleRequest(request, tip)
+        return this.acquiesce(request, tip)
     }
     // 添加数据，add添加新值
     async insert(table, data) {
@@ -180,7 +180,7 @@ export class DB {
             const request = cursorIndex
                 ? objectStore.index(cursorIndex).openCursor(keyRange)
                 : objectStore.openCursor(keyRange)
-            return this.handleRequest(request, `通过${cursorIndex ? '索引游标' : '游标'}获取数据成功`)
+            return this.acquiesce(request, `通过${cursorIndex ? '索引游标' : '游标'}获取数据成功`)
         } catch (error) {
             console.error(error)
             return Promise.reject(error);
