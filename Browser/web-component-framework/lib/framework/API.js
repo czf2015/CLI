@@ -56,21 +56,21 @@ export class API extends List {
 
     // @params Array | Object
     async put(params) {
-        return this.patch(params)
-    }
-
-    // @params Array | Object
-    async patch(params) {
         const handler = (res) => {
             execute(params => {
                 if (this.validate(params)) {
-                    this.list.patch({ ...params.item || params, modifiedAt: Date.now() }, params.params)
+                    this.list.update({ ...params.item || params, modifiedAt: Date.now() }, params.params)
                 } else {
                     throw ({ code: 400, message: 'params error' })
                 }
             }, params)
         }
         return this.respond(params, handler)
+    }
+
+    // @params Array | Object
+    async patch(params) {
+        return this.put(params)
     }
 
     // @params undefined | Array | Object

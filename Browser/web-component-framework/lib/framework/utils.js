@@ -175,25 +175,6 @@ export const html = (raw, mode = false) => {
     }
 }
 
-export class HTML {
-    constructor(tag = 'template', innerHTML = '') {
-        this.tag = tag
-        this.innerHTML = innerHTML
-    }
-
-    static html(raw) {
-        return html(raw)
-    }
-
-    static attrs(properties, mode = false) {
-        return attrs(properties, mode = false)
-    }
-
-    static html(raw, mode = false) {
-        return html(raw, mode = false)
-    }
-}
-
 export const isType = (value, type) => typeof type === 'function'
     ? value instanceof type
     : typeof value === type
@@ -226,10 +207,6 @@ export class List {
     }
 
     update(item, params = undefined) {
-        return this.patch(item, params)
-    }
-
-    patch(item, params = 'undefiend') {
         if (typeof params === 'undefined') {
             for (let i = 0; i < this.list.length; i++) {
                 if (this.list[i].id === item.id) {
