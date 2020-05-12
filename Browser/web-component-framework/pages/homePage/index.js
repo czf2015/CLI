@@ -2,7 +2,6 @@ import { Component, customElementRegister } from '../../lib/framework/index.mjs'
 import TodoList from './business/TodoList.js'
 import FeedBack from './business/FeedBack.js'
 
-
 class HomePage extends Component {
     render() {
         return (

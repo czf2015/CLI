@@ -2,8 +2,9 @@ import { Request } from '../lib/framework/index.js'
 
 
 export default class Service {
-    constructor(api) {
+    constructor(api, model) {
         this.api = api
+        this.model = model
     }
 
     get(params) {

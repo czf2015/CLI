@@ -1,14 +1,19 @@
-const h = (handle, params) => Array.isArray(params) ? params.map(handle) : handle(params)
+import { isType, execute, List } from './utils.js'
 
-// 接口
-export class API {
+
+export class API extends List {
     constructor(Model, list = []) {
+        super(list)
         this.Model = Model
-        this.list = list
     }
 
-    // @params undefined | Array | Object
-    get(params) {
+    validate(params) {
+        const value = { ...this.Model, ...params }
+        return Object.keys(value).length == Object.keys(this.Model).length
+            && Object.keys(params).every(key => isType(params[key], this.Model[key]))
+    }
+
+    respond(params, handler) {
         const res = {
             statusCode: 200,
             errMsg: '',
@@ -17,126 +22,60 @@ export class API {
         if (typeof params !== 'undefined') {
             try {
                 if (typeof params === 'object') {
-                    res.data = h(params => this.list.find(item => Object.keys(params).every(key => item[key] === params[key])), params)
+                    handler(res)
                 } else {
-                    throw({code: 400, message: `${params} is not object`})
+                    throw ({ code: 400, message: `${params} is not object` })
                 }
-            } catch(e) {
+            } catch (e) {
                 res.statusCode = e.code || 500
                 res.errMsg = e.message || JSON.stringify(e)
             }
         }
-        return Promise.resolve(res)
-    }
-
-    // @params Array | Object
-    post(params) {
-        const res = {
-            statusCode: 200,
-            errMsg: '',
-            data: this.list
-        }
-        try {
-            if (typeof params === 'object') {
-                h(params => {
-                    const value = {...this.Model, ...params}
-                    const valid = Object.keys(value).length == Object.keys(this.Model).length
-                                && Object.keys(value).every(key => typeof value[key] === typeof this.Model[key])
-                    if (valid) {
-                        this.list.push(value)
-                    } else {
-                        throw({code: 400, message: 'params error'})
-                    }
-                }, params)
-            } else {
-                throw({code: 400, message: `${params} is not object`})
-            }
-        } catch(e) {
-            res.statusCode = e.code || 500
-            res.errMsg = e.message || JSON.stringify(e)
-        }
-        return Promise.resolve(res)
+        return res
     }
 
     // @params undefined | Array | Object
-    delete(params) {
-        const res = {
-            statusCode: 200,
-            errMsg: '',
-            data: this.list
-        }
-        if (typeof params !== 'undefined') {
-            try {
-                if (typeof params === 'object') {
-                    h(params => this.list = this.list.fliter(item => item.id != params.id), params)
-                } else {
-                    throw({code: 400, message: `${params} is not object`})
-                }
-            } catch(e) {
-                res.statusCode = e.code || 500
-                res.errMsg = e.message || JSON.stringify(e)
-            }
-        } else {
-            this.list = [] // delete all
-        }
-        return Promise.resolve(res)
+    async get(params) {
+        const handler = res => res.data = execute(this.list.find, params)
+        return this.respond(params, handler)
     }
 
     // @params Array | Object
-    put(params) {
-        const res = {
-            statusCode: 200,
-            errMsg: '',
-            data: this.list
+    async post(params) {
+        const handler = (res) => {
+            execute(params => {
+                if (this.validate(params)) {
+                    this.list.insert({ ...this.Model, ...params, createdAt: Date.now(), modifiedAt: Date.now() })
+                } else {
+                    throw ({ code: 400, message: 'params error' })
+                }
+            }, params)
         }
-        try {
-            if (typeof params === 'object') {
-                h(params => {
-                    const value = {...this.Model, ...params, modifiedAt: Date.now()}
-                    const valid = Object.keys(value).length == Object.keys(this.Model).length
-                                && Object.keys(value).every(key => typeof value[key] === typeof this.Model[key])
-                    if (valid) {
-                        this.list = this.list.map(item => item.id == params.id ? value : item)
-                    } else {
-                        throw({code: 400, message: 'params error'})
-                    }
-                }, params)
-            } else {
-                throw({code: 400, message: `${params} is not object`})
-            }
-        } catch(e) {
-            res.statusCode = e.code || 500
-            res.errMsg = e.message || JSON.stringify(e)
-        }
-        return Promise.resolve(res)
+        return this.respond(params, handler)
     }
-    
+
     // @params Array | Object
-    patch(params) {
-        const res = {
-            statusCode: 200,
-            errMsg: '',
-            data: this.list
+    async put(params) {
+        return this.patch(params)
+    }
+
+    // @params Array | Object
+    async patch(params) {
+        const handler = (res) => {
+            execute(params => {
+                if (this.validate(params)) {
+                    this.list.patch({ ...params.item || params, modifiedAt: Date.now() }, params.params)
+                } else {
+                    throw ({ code: 400, message: 'params error' })
+                }
+            }, params)
         }
-        try {
-            if (typeof params === 'object') {
-                h(params => this.list = this.list.map(item => {
-                    const value = {...item, ...params, modifiedAt: Date.now()}
-                    const valid = Object.keys(value).length == Object.keys(this.Model).length
-                                && Object.keys(value).every(key => typeof value[key] === typeof this.Model[key])
-                    if (valid) {
-                        item.id == params.id ? value : item
-                    } else {
-                        throw({code: 400, message: 'params error'})
-                    }
-                }, params))
-            } else {
-                throw({code: 400, message: `${params} is not object`})
-            }
-        } catch(e) {
-            res.statusCode = e.code || 500
-            res.errMsg = e.message || JSON.stringify(e)
-        }
-        return Promise.resolve(res)
+        return this.respond(params, handler)
+    }
+
+    // @params undefined | Array | Object
+    async delete(params) {
+        const handler = (res) => execute(this.list.delete, params)
+        return this.respond(params, handler)
     }
 }

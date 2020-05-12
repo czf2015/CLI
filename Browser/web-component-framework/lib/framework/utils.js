@@ -1,22 +1,18 @@
-export function isRoute(path) {
+export const customElementRegister = (customs) => Object.entries(customs)
+    .forEach(custom => window.customElements.define(...custom))
+
+export const isRoute = (path) => {
     const paths = (window.location.pathname || '/').split('/')
     const slugs = path.split('/')
-    if (slugs.length !== paths.length) {
-        return false
-    }
+    if (slugs.length !== paths.length) return false
     for (let i = 0; i < slugs.length; i++) {
-        if (slugs[i].includes(':')) {
-            return true
-        } else {
-            if (slugs[i] !== paths[i]) {
-                return false
-            }
-        }
+        if (slugs[i].includes(':')) return true
+        if (slugs[i] !== paths[i]) return false
     }
     return true
 }
 
-export function deepCopy(oldObj) {
+export const deepCopy = (oldObj) => {
     const list = []
 
     return function deepCopy(oldObj) {
@@ -43,18 +39,13 @@ export function deepCopy(oldObj) {
     }(oldObj)
 }
 
-export function keyValues(obj) {
-    return Object.keys(obj).map(key => ({
-        key,
-        value: obj[key]
-    }))
-}
+export const keyValues = (obj) =>
+    Object.keys(obj).map(key => ({ key, value: obj[key] }))
 
-export function keyValue(raw) {
-    return typeof raw === 'object' ? keyValues(raw)[0] : raw
-}
+export const keyValue = (raw) =>
+    typeof raw === 'object' ? keyValues(raw)[0] : raw
 
-export function format(raw, fields, convert) {
+export const format = (raw, fields, convert) => {
     const list = {}
 
     return function format(raw, fields, convert) {
@@ -88,7 +79,7 @@ export function format(raw, fields, convert) {
 }
 
 
-export function adapt(raw, transform) {
+export const adapt = (raw, transform) => {
     const list = []
 
     return function adapt(raw, transform) {
@@ -119,7 +110,7 @@ export function adapt(raw, transform) {
     }(raw, transform)
 }
 
-export async function integrate(rule, cause) {
+export const integrate = async (rule, cause) => {
     const h = cause => rule.handle ? rule.handle(cause) : cause
 
     if (rule.prerequisites && rule.prerequisites.length > 0) {
@@ -134,10 +125,133 @@ export async function integrate(rule, cause) {
                 const promises = rule.prerequisites.map(async (prerequisite) => await integrate(prerequisite, cause))
                 const method = rule.mode === 'parallel' ? 'all' : 'race'
                 return Promise[method](promises).then(h)
-            default: 
+            default:
                 throw `${rule.mode} is not one type of modes: serial, parallel, select`
         }
     } else {
         return h(cause)
+    }
+}
+
+export const attrs = (properties, mode = false) => {
+    if (mode) {
+        const attributes = {}
+        properties.trim().replace(/[\'\"]/g, '').split(/\s+/)
+            .forEach(property => {
+                const [attribute, value] = property.split('=')
+                attributes[attribute] = value
+            })
+        return attributes
+    } else {
+        return Object.entries(properties)
+            .map(([attribute, value]) => `${attribute}="${value}"`)
+            .join(' ')
+    }
+}
+
+export const html = (raw, mode = false) => {
+    if (mode) {
+        // 先区分tag property 
+        // 再处理children 
+        // const words = text.split(/[\b]*)/g)
+        // for (let i = 0; i < words.length; i++) {
+        //     const word = words[i]
+        //     const p = word.indexOf('=')
+        //     if (p == -1) {
+        //         return word.replace(/[><\/]*/g, '')
+        //     } else {
+        //         return [word.slice(0, p), word.slice(p)]
+        //     }
+        // }
+
+    } else {
+        const h = ({ render, params, text }) => render ? render(params) : text || ''
+        if (Array.isArray(raw)) {
+            return raw.map(html).join('')
+        } else {
+            const { tag, properties, children } = raw
+            return `<${tag} ${attrs(properties)}>${children ? html(children) : h(raw)}</${tag}>`
+        }
+    }
+}
+
+export class HTML {
+    constructor(tag = 'template', innerHTML = '') {
+        this.tag = tag
+        this.innerHTML = innerHTML
+    }
+
+    static html(raw) {
+        return html(raw)
+    }
+
+    static attrs(properties, mode = false) {
+        return attrs(properties, mode = false)
+    }
+
+    static html(raw, mode = false) {
+        return html(raw, mode = false)
+    }
+}
+
+export const isType = (value, type) => typeof type === 'function'
+    ? value instanceof type
+    : typeof value === type
+
+export const execute = (handle, task) => Array.isArray(task)
+    ? task.map(handle)
+    : handle(task)
+
+export const contain = (source, target) => Object.keys(target)
+    .every(key => source[key] === target[key])
+
+export class List {
+    constructor(list = []) {
+        this.list = list
+    }
+
+    contain(param) {
+        return this.list.some(item => contain(item, param))
+    }
+
+    find(params = undefined) {
+        return typeof params === 'undefined'
+            ? this.list
+            : this.list.fliter(item => contain(item, params))
+    }
+
+    insert(item) {
+        this.list.push(item)
+        return this.list
+    }
+
+    update(item, params = undefined) {
+        return this.patch(item, params)
+    }
+
+    patch(item, params = 'undefiend') {
+        if (typeof params === 'undefined') {
+            for (let i = 0; i < this.list.length; i++) {
+                if (this.list[i].id === item.id) {
+                    this.list[i] = item
+                    break
+                }
+            }
+        } else {
+            for (let i = 0; i < this.list.length; i++) {
+                if (contain(this.list[i], params)) {
+                    Object.assign(this.list[i], item)
+                    break
+                }
+            }
+        }
+        return this.list
+    }
+
+    delete(params = undefined) {
+        this.list = typeof params === 'undefined'
+            ? []
+            : this.list.fliter(item => !contain(item, params))
+        return this.list
     }
 }
