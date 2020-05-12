@@ -11,7 +11,7 @@ class DemoPage extends DataBind {
             //     console.log(res)
             setTimeout(() => {
                 USER.post({ id: 0, username: 'c0', password: '00' })
-                    .then(({ data }) => {
+                    .then(({ data } = {}) => {
                         console.log(data)
                         store.dispatch('push', { history: { title: 'demo', tag: 'demo_page', data } })
                         console.log(store.state)

@@ -6,11 +6,9 @@ export default class Service {
     constructor(api, model) {
         this.api = api
         this.model = model
-        db.openDB().then(store => {
-            db.create(this.api, {
-                key: "id",
-                index: [{ key: 'id', unique: false }]
-            })
+        db.create(this.api, {
+            key: "id",
+            index: [{ key: 'id', unique: false }]
         })
     }
 
