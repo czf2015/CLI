@@ -7,7 +7,7 @@ export default class Service {
         this.api = api
         this.model = model
         db.openDB().then(store => {
-            db.create(this.api, {
+            db.create('service', {
                 key: "id",
                 index: [{ key: 'key', unique: false }]
             })
@@ -20,7 +20,7 @@ export default class Service {
 
     async post(params) {
         // return Request.post(this.api.POST || this.api, params)
-        return db.insert(this.table, params)
+        return db.insert('service', params)
     }
 
     async put(params) {

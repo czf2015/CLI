@@ -1,6 +1,139 @@
-// docs: https://wangdoc.com/javascript/bom/indexeddb.html
+// docs: [IndexedDB 教程](https://cloud.tencent.com/developer/article/1190562)
+
 /* 对不同浏览器的indexedDB进行兼容 */
 const indexedDB = window.indexedDB || window.webkitindexedDB || window.mozIndexedDB || window.msIndexedDB
+// 判断浏览器是否支持indexedDB
+if (!indexedDB) {
+    console.log('你的浏览器不支持IndexedDB');
+}
+// 打开或(不存在时)新建数据库
+const openDB = async (name, version = 1) => {
+    return new Promise((resolve, reject) => {
+        const request = indexedDB.open(name, version);
+        request.onerror = (e) => {
+            console.error(e.currentTarget.error.message);
+            reject(e.currentTarget.error.message)
+        };
+        request.onsuccess = (e) => {
+            resolve(e.target.result)
+        };
+        request.onupgradeneeded = (e) => {
+            console.log('DB version changed to ' + version);
+            resolve(e.target.result)         
+        };
+    })
+}
+// 关闭数据库
+const closeDB = async (db) => {
+    await db.close();
+}
+// 删除数据库
+const deleteDB = async (name) => {
+    await indexedDB.deleteDatabase(name);
+}
+// 新增记录
+const addData = async (db, storeName, data) => {
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction(storeName, 'readwrite');
+        const store = transaction.objectStore(storeName);
+        resolve(store.add(data))
+    })
+}
+// 通过key获取数据
+const getDataByKey = async (db, storeName, value) => {
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction(storeName, 'readwrite');
+        const store = transaction.objectStore(storeName);
+        const request = store.get(value);
+        request.onsuccess = (e) => {
+            resolve(e.target.result)
+        };
+    })
+}
+// 通过key更新数据
+const updateDataByKey = async (db, storeName, value, data) => {
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction(storeName, 'readwrite');
+        const store = transaction.objectStore(storeName);
+        const request = store.get(value);
+        request.onsuccess = (e) => {
+            Object.assign(e.target.result, data)
+            store.put(e.target.result);
+            resolve(e.target.result)
+        };
+    })
+}
+// 通过key删除数据
+const deleteDataByKey = async (db, storeName, value) => {
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction(storeName, 'readwrite');
+        const store = transaction.objectStore(storeName);
+        store.delete(value);
+        resolve(value)
+    })
+}
+// 清空数据表
+const clearObjectStore = (db, storeName) => {
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction(storeName, 'readwrite');
+        const store = transaction.objectStore(storeName);
+        store.clear();
+        resolve()
+    })
+}
+// 删除数据表
+const deleteObjectStore = (db, storeName) => {
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction(storeName, 'versionchange');
+        db.deleteObjectStore(storeName);
+        resolve()
+    })
+}
+// 通过游标查表
+const fetchStoreByCursor = (db, storeName) => {
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction(storeName);
+        const store = transaction.objectStore(storeName);
+        const request = store.openCursor();
+        request.onsuccess = (e) => {
+            const cursor = e.target.result;
+            if (cursor) {
+                resolve(cursor)
+                cursor.continue();
+            } else {
+                reject(e.target.result)
+            }
+        };
+    })
+}
+// 通过索引获取数据
+const getDataByIndex = (db, storeName) => {
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction(storeName);
+        const store = transaction.objectStore(storeName);
+        const index = store.index("ageIndex");
+        index.get(26).onsuccess = (e) => {
+            resolve(e.target.result)
+        }
+    })
+}
+// 获取多条数据
+const getMultipleData = (db, storeName) => {
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction(storeName);
+        const store = transaction.objectStore(storeName);
+        const index = store.index("nameIndex");
+        const request = index.openCursor(null, IDBCursor.prev);
+        request.onsuccess = (e) => {
+            const cursor = e.target.result;
+            if (cursor) {
+                resolve(cursor)
+                cursor.continue();
+            }
+        }
+    })
+}
+
 
 export class DB {
     constructor(dbName, dbVersion) {
@@ -105,14 +238,13 @@ export class DB {
     async find(table, keyValue, indexCursor) {
         try {
             const db = await this.openDB()
-            const store = db
-                .transaction(table, "readonly")
-                .objectStore(table);
+            const transaction = db.transaction(table, "readonly")
+            const objectStore = transaction.objectStore(table);
             const request = !keyValue
-                ? store.openCursor()
+                ? objectStore.openCursor()
                 : indexCursor
-                    ? store.index(indexCursor).get(keyValue)
-                    : store.get(keyValue);
+                    ? objectStore.index(indexCursor).get(keyValue)
+                    : objectStore.get(keyValue);
             const data = [];
             return new Promise(resolve => {
                 request.onerror = (error) => {
@@ -139,11 +271,15 @@ export class DB {
         }
     }
 
-    async alter({ method, params, table, tip }) {
+    async alter({ table, method, params, multiple = false/* 是否多个参数 */, tip }) {
         try {
             const db = await this.openDB();
-            const store = db.transaction(table, 'readwrite').objectStore(table)
-            const request = store[method](...params) // 操作方法
+            console.log(db.transaction)
+            const transaction = db.transaction(table, 'readwrite')
+            const objectStore = transaction.objectStore(table)
+            const request = multiple
+                ? objectStore[method](...params)
+                : objectStore[method](params)
             return new Promise(resolve => {
                 request.onerror = (error) => {
                     console.error(error)
@@ -161,15 +297,15 @@ export class DB {
     }
     // 添加数据，add添加新值
     async insert(table, data) {
-        return this.alter({ method: 'add', table, params: [data], tip: '添加数据' })
+        return this.alter({ method: 'add', table, params: data, tip: '添加数据' })
     }
     // 更新
     async update(table, data) {
-        return this.alter({ method: 'put', table, params: [data], tip: '更新数据' })
+        return this.alter({ method: 'put', table, params: data, tip: '更新数据' })
     }
     // 删除数据
     async delete(table, keyValue) {
-        return this.alter({ method: 'delete', table, params: [keyValue], tip: '删除数据' })
+        return this.alter({ method: 'delete', table, params: keyValue, tip: '删除数据' })
     }
     // 清空数据
     async clear(table) {
@@ -178,7 +314,7 @@ export class DB {
 
     // 创建游标索引
     async createCursorIndex(table, index, unique) {
-        return this.alter({ method: 'createIndex', table, data: [index, index, { unique }], tip: '创建游标索引' })
+        return this.alter({ method: 'createIndex', table, params: [index, index, { unique }], multiple: true, tip: '创建游标索引' })
     }
 
     async handleDataByCursor(table, keyRange = '', cursorIndex = undefined) {

@@ -1,21 +1,23 @@
 import { customElementRegister } from '../../lib/framework/index.js'
 import DataBind from '../../components/DataBind.js'
-import { ACCOUNT } from '../../config/apis.js'
+import { USER } from '../../config/apis.js'
 import store from '../../store/index.js'
 
 
 class DemoPage extends DataBind {
     async once() {
         {
-            ACCOUNT.get().then(res => {
-                console.log(res)
-                ACCOUNT.post({ id: 0, username: 'c0', password: '00' })
+            // USER.get().then(res => {
+            //     console.log(res)
+            setTimeout(() => {
+                USER.post({ id: 0, username: 'c0', password: '00' })
                     .then(({ data }) => {
                         console.log(data)
-                        store.dispatch('push', { history: { title: 'demo', tag: 'demo_page', data }})
+                        store.dispatch('push', { history: { title: 'demo', tag: 'demo_page', data } })
                         console.log(store.state)
                     })
-            })
+            }, 200)
+            // })
         }
     }
 }
