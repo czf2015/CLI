@@ -1,5 +1,6 @@
 // docs: [IndexedDB 教程](https://cloud.tencent.com/developer/article/1190562)
 import { noop } from './utils.js'
+
 /* 对不同浏览器的indexedDB进行兼容 */
 const indexedDB = window.indexedDB || window.webkitindexedDB || window.mozIndexedDB || window.msIndexedDB
 // 判断浏览器是否支持indexedDB
