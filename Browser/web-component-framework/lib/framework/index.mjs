@@ -110,3 +110,5 @@ export const html = (raw, mode = false) => {
         }
     }
 }
+
+export const noop = (...params) => { }

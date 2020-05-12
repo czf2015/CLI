@@ -7,8 +7,6 @@ if (!indexedDB) {
     console.log('你的浏览器不支持IndexedDB');
 }
 
-const noop = (...params) => { }
-
 export class DB {
     constructor(dbName, dbVersion) {
         this.dbName = dbName

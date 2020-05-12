@@ -232,3 +232,6 @@ export class List {
         return this.list
     }
 }
+
+
+export const noop = (...params) => { }
