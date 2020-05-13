@@ -23,7 +23,7 @@ npm run start
 
 
 - config -- 配置文件
-    |__ routes.js -- 路由配置
+    |__ apis.js -- 前端调用接口
 
 - constants -- 通用常量
     |__ 时间常量
@@ -45,7 +45,7 @@ npm run start
 
 - components -- 通用组件
 
-- apis -- 前端调用接口及数据结构
+- models -- 数据结构
 
 - services -- 将后端服务统一封装成API形式的restful风格接口供前端调用
 
