@@ -5,13 +5,14 @@ export class Store {
     constructor(state) {
         this.state = { ...state }
         this.records = {}
-        this.init()
+        // this.init()
     }
 
-    init() {
-        Object.keys(this.state)
-            .forEach(key => state[key] = typeMeta(this.state[key]))
-    }
+    // todo:
+    // init() {
+    //     Object.keys(this.state)
+    //         .forEach(key => state[key] = typeMeta(this.state[key]))
+    // }
 
     // 
     dispatch(action, payload) {

@@ -8,7 +8,10 @@ export default class Service {
         this.model = model
         db.create(this.api, {
             key: "id",
-            index: [{ key: 'id', unique: false }]
+            index: [
+                { key: 'id', unique: false }, 
+                { key: 'name', unique: false }
+            ]
         })
     }
 
@@ -17,8 +20,22 @@ export default class Service {
     }
 
     async post(params) {
+        // db.close()
+        // 删除数据库 验证成功
+        // db.delete() 
+        // 插入数据
+        db.insert(this.api, params)
+        // db.update(this.api, {
+        //     errorMsg: 'error',
+        //     successMsg: 'success'
+        // })
+        // 删除数据
+        // db.remove(this.api, 'id')
+        // 清空数据
+        // db.clear(this.api)
+        // db.createCursorIndex(this.api, 'id', false)
         // return Request.post(this.api.POST || this.api, params)
-        return db.insert(this.api, params)
+        // return db.insert(this.api, params)
     }
 
     async put(params) {

@@ -9,7 +9,7 @@ if (!indexedDB) {
 }
 
 export class DB {
-    constructor(dbName, dbVersion) {
+    constructor(dbName, dbVersion = 1) {
         this.dbName = dbName
         this.dbVersion = dbVersion
     }
@@ -17,7 +17,7 @@ export class DB {
     async getObjectStore(table, permission = 'readonly', db = undefined) {
         try {
             if (typeof db === 'undefined') {
-                db = await this.openDB()
+                db = await this.open()
             }
             const transaction = db.transaction(table, permission)
             const objectStore = transaction.objectStore(table)
@@ -45,24 +45,24 @@ export class DB {
         })
     }
     // 打开数据库
-    async openDB(upgradeHandler = noop) {
+    async open(upgradeHandler = noop) {
         const request = indexedDB.open(this.dbName, this.dbVersion);
-        return this.acquiesce(request, 'open DB', upgradeHandler)
+        return await this.acquiesce(request, 'open DB', upgradeHandler)
     }
     // 删除
-    async deleteDB() {
+    async delete() {
         const deleteQuest = indexedDB.deleteDatabase(this.dbName);
         return this.acquiesce(deleteQuest, 'delete DB sucess')
     }
     // 关闭数据库
-    async closeDB() {
-        const db = await this.openDB()
+    async close() {
+        const db = await this.open()
         db.close()
     }
 
     // 创建表
     async create(table, option) {
-        return this.openDB(async (db) => {
+        return this.open(async (db) => {
             try {
                 if (!db.objectStoreNames.contains(table)) {
                     const objectStore = db.createObjectStore(table, {
@@ -141,24 +141,24 @@ export class DB {
     }
     // 添加数据，add添加新值
     async insert(table, data) {
-        return this.openDB(async (db) => await this.alter({ db, method: 'add', table, params: data, tip: '添加数据' }))
+        return this.open(async (db) => await this.alter({ db, method: 'add', table, params: data, tip: '添加数据' }))
     }
     // 更新
     async update(table, data) {
-        return this.alter({ table, method: 'put', params: data, tip: '更新数据' })
+        this.open(async (db) => await this.alter({ table, method: 'put', params: data, tip: '更新数据' }))
     }
     // 删除数据
-    async delete(table, keyValue) {
-        return this.alter({ table, method: 'delete', params: keyValue, tip: '删除数据' })
+    async remove(table, keyValue) {
+        this.open(async (db) => await this.alter({ table, method: 'delete', params: keyValue, tip: '删除数据' }))
     }
     // 清空数据
     async clear(table) {
-        return this.alter({ table, method: 'clear', tip: '清空数据' })
+        this.open(async (db) => await this.alter({ table, method: 'clear', tip: '清空数据' }))
     }
 
     // 创建游标索引
     async createCursorIndex(table, index, unique) {
-        return this.alter({ table, method: 'createIndex', params: [index, index, { unique }], multiple: true, tip: '创建游标索引' })
+        this.open(async (db) => await this.alter({ table, method: 'createIndex', params: [index, index, { unique }], multiple: true, tip: '创建游标索引' }))
     }
 
     async getDataByCursor(table, keyRange = '', cursorIndex = undefined) {
