@@ -7,13 +7,13 @@ export class API extends List {
         this.Model = Model
     }
 
-    validate(params) {
+    /* private */validate(params) {
         const value = { ...this.Model, ...params }
         return Object.keys(value).length == Object.keys(this.Model).length
             && Object.keys(params).every(key => isType(params[key], this.Model[key]))
     }
 
-    respond(params, handler) {
+    /* private */respond(params, handler) {
         const res = {
             statusCode: 200,
             errMsg: '',

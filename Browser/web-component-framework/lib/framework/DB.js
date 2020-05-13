@@ -14,7 +14,7 @@ export class DB {
         this.dbVersion = dbVersion
     }
     // 
-    async getObjectStore(table, permission = 'readonly', db = undefined) {
+    /* private */async getObjectStore(table, permission = 'readonly', db = undefined) {
         try {
             if (typeof db === 'undefined') {
                 db = await this.open()
@@ -28,7 +28,7 @@ export class DB {
         }
     }
     // 
-    async acquiesce(request, tip, upgradeHandler = noop) {
+    /* private */async acquiesce(request, tip, upgradeHandler = noop) {
         return new Promise((resolve, reject) => {
             request.onerror = (error) => {
                 console.error(error)
