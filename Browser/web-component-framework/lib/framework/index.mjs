@@ -14,7 +14,7 @@ export class Component extends HTMLElement {
         this.state = new Proxy({ ...this.data(), ...props }, {
             set: (target, key, receiver) => {
                 const retVal = Reflect.set(target, key, receiver)
-                this.shadow.innerHTML = this.render(this.state);
+                this.shadow.innerHTML = this.render(target);
                 this.listen()
                 return retVal;
             }
@@ -27,20 +27,31 @@ export class Component extends HTMLElement {
                 Object.assign(this.state, target)
                 return retVal;
             }
-        })   
+        })
 
         this.shadow.innerHTML = this.render(this.state);
         this.listen()
+
         this.once()
     }
-    
-    render(state) {}
 
-    data() {}   
+
+    render(state) { }
+
+    data() { }
+
+    setState(data) {
+        if (typeof data === 'object'
+            && Object.keys(data).every(key => typeof data[key] === typeof this.state[key])) {
+            Object.assign(this.state, data)
+        }
+    }
+
     // 每次状态更新，需要重新绑定
-    listen() {}
+    listen() { }
+
     // 仅初始化完成时执行一次
-    once() {}
+    once() { }
 
     $(selector) {
         return this.shadow.querySelector(selector)
@@ -50,7 +61,7 @@ export class Component extends HTMLElement {
 export const customElementRegister = (customs) => Object.entries(customs)
     .forEach(custom => window.customElements.define(...custom))
 
-    export const isRoute = (path) => {
+export const isRoute = (path) => {
     const paths = (window.location.pathname || '/').split('/')
     const slugs = path.split('/')
     if (slugs.length !== paths.length) return false

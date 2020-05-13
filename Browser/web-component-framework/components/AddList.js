@@ -28,7 +28,7 @@ export default class AddList extends Component {
             this.$("button").addEventListener("click", () => {
                 const inputVal = this.inputRef.value || this.inputRef.placeholder
                 if (inputVal) {
-                    Object.assign(this.state, {
+                    this.setState({
                         inputVal,
                         list: [...this.state.list, inputVal]
                     })
