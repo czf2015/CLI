@@ -10,21 +10,14 @@ export class Component extends HTMLElement {
         const atrributes = this.getAttributeNames()
         atrributes.forEach(attribute => props[attribute] = this.getAttribute(attribute))
 
-        // 数据视图绑定
-        this.state = new Proxy({ ...this.data(), ...props }, {
-            set: (target, key, receiver) => {
-                const retVal = Reflect.set(target, key, receiver)
-                this.shadow.innerHTML = this.render(target);
-                this.listen()
-                return retVal;
-            }
-        })
+        // 页面状态
+        this.state = { ...this.data(), ...props }
 
         // 单向传递 props可传递数据、函数及更复杂的对象
         this.props = new Proxy(props, {
             set: (target, key, receiver) => {
                 const retVal = Reflect.set(target, key, receiver)
-                Object.assign(this.state, target)
+                this.setState(target)
                 return retVal;
             }
         })
@@ -41,9 +34,10 @@ export class Component extends HTMLElement {
     data() { }
 
     setState(data) {
-        if (typeof data === 'object'
-            && Object.keys(data).every(key => typeof data[key] === typeof this.state[key])) {
+        if (typeof data === 'object') {
             Object.assign(this.state, data)
+            this.shadow.innerHTML = this.render(this.state);
+            this.listen()
         }
     }
 
