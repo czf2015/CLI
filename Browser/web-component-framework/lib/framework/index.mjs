@@ -36,6 +36,11 @@ export class Component extends HTMLElement {
     setState(data) {
         if (typeof data === 'object') {
             Object.assign(this.state, data)
+            // todo:
+            console.log(this.shadow)
+            console.log(this.shadow.atrributes)
+            console.log(this.render)
+            console.log(this.render(this.state))
             this.shadow.innerHTML = this.render(this.state);
             this.listen()
         }

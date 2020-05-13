@@ -25,13 +25,13 @@ class AppContainer extends Component {
     }
 
     listen() {
-        {   // 点击click，页面跳转
-            const paths = ['/', '/demoPage/test']
-            this.$('h1').addEventListener('click', () => {             
-                const pathIndex = paths.indexOf(window.location.pathname) + 1
-                window.location.pathname = pathIndex < paths.length ?  paths[pathIndex] : paths[0]
-            })
-        }
+        // {   // 点击click，页面跳转
+        //     const paths = ['/', '/demoPage/test']
+        //     this.$('h1').addEventListener('click', () => {             
+        //         const pathIndex = paths.indexOf(window.location.pathname) + 1
+        //         window.location.pathname = pathIndex < paths.length ?  paths[pathIndex] : paths[0]
+        //     })
+        // }
         {   // 点击click，验证单向传递   
             this.header = this.$('app-header')        
             this.$('.app-container > h1').addEventListener('click', () => {   

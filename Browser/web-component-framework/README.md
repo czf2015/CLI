@@ -16,6 +16,11 @@ npm run start
 ```
 
 
+## 计划列表
+
+- [ ] 虚拟dom
+- [ ] 是
+
 ## 结构说明
 
 
@@ -26,7 +31,7 @@ npm run start
     |__ apis.js -- 前端调用接口
 
 - constants -- 通用常量
-    |__ 时间常量
+    |__ TIME.js -- 时间常量
 
 - index.html -- html模板
 
@@ -71,3 +76,4 @@ npm run start
 9. `单体资源`（如`components, pages, layouts, store, Router`中的组件以及包内不对外直接使用的基类`models/Model.js, services/Service.js`）使用`export default`形式导出，这样便于按场景重复使用
 10. 第三方代码，统一放在plugins目录
 11. web-component元素按小写+中划线方式，名称要具有描述性，同时体现页面结构，除页面层外，下层组件应该含带上层组件
+
