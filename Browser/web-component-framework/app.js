@@ -1,4 +1,4 @@
-import { Component, customElementRegister } from '../lib/framework/index.mjs'
+import { Component, customElementRegister } from './framework/index.mjs'
 import Header from './layouts/header/Header.js'
 import Footer from './layouts/footer/Footer.js'
 import Router from './Router.js'

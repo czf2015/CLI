@@ -1,4 +1,4 @@
-import { Component } from '../../lib/framework/index.js'
+import { Component } from '../../framework/index.js'
 
 
 export default class Footer extends Component {

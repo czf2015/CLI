@@ -23,6 +23,8 @@ npm run start
 
 ## 结构说明
 
+- framework -- 框架代码
+
 - config -- 配置文件
     |__ apis.js -- 前端调用接口
 
