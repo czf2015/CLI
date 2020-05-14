@@ -1,5 +1,6 @@
 
-// 双向数据绑定不适合内部嵌套其他组件的情况，当state改变时会导致嵌套的组件重新渲染
+// docs: [HTMLElement](https://www.w3school.com.cn/xmldom/dom_htmlelement.asp)
+
 class Component extends HTMLElement {
     constructor() {
         super();
@@ -23,12 +24,24 @@ class Component extends HTMLElement {
             }
         })
 
-        this.shadow.innerHTML = this.template(this.state);
+        this.shadow.innerHTML = this.render(this.template())
         this.listen()
 
         this.once()
     }
 
+    render(data, template) {
+        template = '${.name . name .age}'
+        const h = data => template
+            .replace(/\$\{\s*((\.)(\S*)[\s\S]*\S*)\s*\}/g, ($, $1, $2, $3) =>
+                $1.replace(/(\.)(\S*)/g, ($, $1, $2) => $2 ? data[$2] : data)
+            )
+        console.log(h({ name: 'czf', age: 34 }))
+        return this.template()
+            // .replace(/\>\s*\</g, _ => _.replace(/\s+/g, ''))
+            .replace(/\s*=\s*/g, '=') // 去除等号两边空格
+            // .replace(/\>\s*(\{[\s\S]*\})\s*\</g, _ => _.replace(/\s+/g, '')) // 去除{}空格
+    }
 
     template(state) { }
 
@@ -37,7 +50,7 @@ class Component extends HTMLElement {
     setState(data) {
         if (typeof data === 'object') {
             Object.assign(this.state, data)
-            this.shadow.innerHTML = this.template(this.state);
+            // this.shadow.innerHTML = template;
             this.listen()
         }
     }

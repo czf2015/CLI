@@ -1,19 +1,4 @@
 import XML from '../../plugins/XML.js'
-import { attrs } from '../utils/index.mjs'
-
-
-const render = ({ inputVal, list }) => {
-    // computed
-    return (
-        `<div>
-            <input type="text" placeholder="hello" value = ${inputVal} />
-            <button type="button">add</button>
-            <ul>
-                ${list.map(item => `<li>${item + 2}</li>`)}
-            </ul>
-        </div>`
-    );
-}
 
 const patterns = {
     template: /\`([\s\S]*)\`/,
@@ -23,19 +8,35 @@ const patterns = {
     shutTag: /\<{1}[^\<]+\/\>/,
     expression: /\$\{+[^\}]+\}+/,
     text: /\<([a-z]+>)[\s\S]+/,
-
 }
 
-const template = render.toString()
+class Component {
+    template() {
+        // computed
+        return (
+            `<div>
+                <input type="text" placeholder="hello" :value="inputVal" :class="theme" @focus="pop" />
+                <button type="button"> add </button>
+                <ul>
+                    <li :for="item in list" :key="item"> { item } </li>
+                </ul>
+            </div>`
+        );
+    }
+}
+
+const component = new Component()
+()
+const template = component.template.toString()
     .match(patterns.template)[1]
+    // .replace(/\>\s*\</g, _ => _.replace(/\s+/g, ''))
     .replace(/\s*=\s*/g, '=') // 去除等号两边空格
-    .replace(/\$\{+[^\}]+\}+/g, c => c.replace(/\s+/g, '')) // 去除${}空格
-    .replace(/\`/g, '')
-// .replace(/\<\>[\s]*\</g, '"children": [{')
-// .replace(/\<([a-z]+)/g, (_, $1) => `{"${$1}":{`)
+    .replace(/\>\s*(\{[\s\S]*\})\s*\</g, _ => _.replace(/\s+/g, '')) // 去除{}空格
 
 
+console.log(template)
 
-const xml = new XML(template)
 
-xml.toJSON()
+// const xml = new XML(template)
+
+// xml.toJSON()

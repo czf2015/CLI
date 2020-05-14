@@ -1,50 +1,42 @@
-import Header from './layouts/header/Header.js'
-import Footer from './layouts/footer/Footer.js'
+// import Header from './layouts/header/Header.js'
+// import Footer from './layouts/footer/Footer.js'
 import Router from './Router.js'
 
 
 class AppContainer extends Component {
     template() {
         return (
-        `<app-header operation="add"></app-header>
-        <main class="app-container">
-            <h1>Click Me!</h1>
-            <app-router></app-router>
-        </main>
-        <app-footer></app-footer>        
-        
-        <style>
-            .app-container > h1 {
-                width: 120px;
-                border: solid;
-                cursor: pointer;
-            }
-        </style>`
+`<app-header operation="add">header</app-header>
+<main class="app-container">
+    <h1 on-click = "add">Click Me!</h1>
+    <app-router v-for = " routes " v-key = " item.tag">{ item.title}</app-router>
+</main>
+<app-footer>footer</app-footer>        
+
+<style>
+    .app-container > h1 {
+        width: 120px;
+        border: solid;
+        cursor: pointer;
+    }
+</style>`
         )
     }
 
     listen() {
-        {   // 点击click，页面跳转
-            const paths = ['/', '/demoPage/test']
-            this.$('h1').addEventListener('click', () => {             
-                const pathIndex = paths.indexOf(window.location.pathname) + 1
-                window.location.pathname = pathIndex < paths.length ?  paths[pathIndex] : paths[0]
+        {   // 点击click，验证单向传递
+            this.header = this.$('app-header')
+            this.$('.app-container > h1').addEventListener('click', () => {   
+                const r = this.$('[v-for="routes"]').dataset
+                console.log(r)  
             })
         }
-        // {   // 点击click，验证单向传递   
-        //     this.header = this.$('app-header')        
-        //     this.$('.app-container > h1').addEventListener('click', () => {   
-        //         if (this.header.state.list.length > 3) {
-        //             this.header.props.operation = 'sub'
-        //         }    
-        //     })
-        // }
     }
 }
 
 customElementRegister({
     'app-container': AppContainer,
-    'app-header': Header,
-    'app-footer': Footer,
-    'app-router': Router,
+    // 'app-header': Header,
+    // 'app-footer': Footer,
+    // 'app-router': Router,
 })

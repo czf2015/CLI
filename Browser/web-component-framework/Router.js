@@ -1,6 +1,6 @@
 
-import '../pages/demoPage/_demo.js'
-import '../pages/homePage/index.js'
+// import '../pages/demoPage/_demo.js'
+// import '../pages/homePage/index.js'
 
 export default class extends Router {
     data() {
