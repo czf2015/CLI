@@ -17,7 +17,7 @@ export default class AddList extends Component {
 
     data() {
         return {
-            inputVal: '',
+            inputVal: '', // div>input::first-child attribute: value
             list: [],
         }
     }
