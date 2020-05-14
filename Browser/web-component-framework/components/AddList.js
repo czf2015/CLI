@@ -1,24 +1,22 @@
-import { Component } from '../framework/index.js'
-
-
 export default class AddList extends Component {
-    render({ inputVal, list }) {
+    template({ inputVal, list }) {
         // computed
         return (
             `<div>
-                <input type="text" placeholder="hello" value="${inputVal}" />
+                <input type="text" placeholder="hello" value={ inputVal } />
                 <button type="button">add</button>
                 <ul>
-                    ${list.map(item => `<li>${item}</li>`).join("")}
+                    { list.map(item => <li>{ item }</li>) }
                 </ul>
             </div>`
         );
     }
 
     data() {
+
         return {
-            inputVal: '', // div>input::first-child attribute: value
-            list: [],
+            inputVal: '', // this.$('div > input:nth-child(1)').value = {inputVal} 
+            list: [], // this.$('div > ul:nth-child(3) > list:nth-child(n)', true).map(el => el.innerHTML = {item})
         }
     }
 

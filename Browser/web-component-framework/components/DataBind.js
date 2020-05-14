@@ -1,8 +1,5 @@
-import { Component } from '../framework/index.js'
-
-
 export default class DataBind extends Component {
-    render({ inputVal }) {
+    template({ inputVal }) {
         return (
             `<div>
                 <input type="text" value="${inputVal}"/>

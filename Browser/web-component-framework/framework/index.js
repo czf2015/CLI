@@ -23,21 +23,21 @@ export class Component extends HTMLElement {
             }
         })
 
-        this.shadow.innerHTML = this.render(this.state);
+        this.shadow.innerHTML = this.template(this.state);
         this.listen()
 
         this.once()
     }
 
 
-    render(state) { }
+    template(state) { }
 
     data() { }
 
     setState(data) {
         if (typeof data === 'object') {
             Object.assign(this.state, data)
-            this.shadow.innerHTML = this.render(this.state);
+            this.shadow.innerHTML = this.template(this.state);
             this.listen()
         }
     }
@@ -68,7 +68,7 @@ export const isRoute = (path) => {
 }
 
 export class Router extends Component {
-    render({ routes }) {
+    template({ routes }) {
         return routes
             .map(({ path, tag, title }) => isRoute(path) ? `<${tag} title="${title}"></${tag}>` : '')
             .join('')

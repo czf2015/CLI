@@ -1,4 +1,3 @@
-import { customElementRegister } from '../../framework/index.js'
 import DataBind from '../../components/DataBind.js'
 import { USER } from '../../config/apis.js'
 import store from '../../store/index.js'

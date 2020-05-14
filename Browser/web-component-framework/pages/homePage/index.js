@@ -1,9 +1,8 @@
-import { Component, customElementRegister } from '../../framework/index.js'
 import TodoList from './business/TodoList.js'
 import FeedBack from './business/FeedBack.js'
 
 class HomePage extends Component {
-    render() {
+    template() {
         return (
             `<feed-back></feed-back>
             <todo-list></todo-list>`

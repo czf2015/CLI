@@ -1,8 +1,5 @@
-import { Component } from '../../framework/index.js'
-
-
 export default class Footer extends Component {
-    render() {
+    template() {
         return (
             `app-footer`
         )

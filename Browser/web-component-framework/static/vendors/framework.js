@@ -1,5 +1,6 @@
+
 // 双向数据绑定不适合内部嵌套其他组件的情况，当state改变时会导致嵌套的组件重新渲染
-export class Component extends HTMLElement {
+class Component extends HTMLElement {
     constructor() {
         super();
 
@@ -13,10 +14,6 @@ export class Component extends HTMLElement {
         // 页面状态
         this.state = { ...this.data(), ...props }
 
-        Object.keys(this.state).forEach(key => {
-            const re = new RegExp(`\s\S]*\{{1}\s*/${key}`)
-        })
-
         // 单向传递 props可传递数据、函数及更复杂的对象
         this.props = new Proxy(props, {
             set: (target, key, receiver) => {
@@ -26,18 +23,13 @@ export class Component extends HTMLElement {
             }
         })
 
-        const template = this.template.toString()
-            .match(/\`([\s\S]*)\`/)[1]
-            .replace(/\s*=\s*/g, '=') // 去除等号两边空格
-            .replace(/[^\>]*\{{1}[^\}]+/g, c => c.replace(/\s+/g, '')) // 去除${}内空格
-
-        this.shadow.innerHTML = template;
+        this.shadow.innerHTML = this.template(this.state);
         this.listen()
 
         this.once()
     }
 
-    // todo: 更名为template
+
     template(state) { }
 
     data() { }
@@ -45,7 +37,7 @@ export class Component extends HTMLElement {
     setState(data) {
         if (typeof data === 'object') {
             Object.assign(this.state, data)
-            this.shadow.innerHTML = '' // this.template(this.state);
+            this.shadow.innerHTML = this.template(this.state);
             this.listen()
         }
     }
@@ -56,7 +48,29 @@ export class Component extends HTMLElement {
     // 仅初始化完成时执行一次
     once() { }
 
-    $(selector, isAll = false) {
-        return isAll ? this.shadow.queryAllSelector(selector) : this.shadow.querySelector(selector)
+    $(selector) {
+        return this.shadow.querySelector(selector)
+    }
+}
+
+const customElementRegister = (customs) => Object.entries(customs)
+    .forEach(custom => window.customElements.define(...custom))
+
+const isRoute = (path) => {
+    const paths = (window.location.pathname || '/').split('/')
+    const slugs = path.split('/')
+    if (slugs.length !== paths.length) return false
+    for (let i = 0; i < slugs.length; i++) {
+        if (slugs[i].includes(':')) return true
+        if (slugs[i] !== paths[i]) return false
+    }
+    return true
+}
+
+class Router extends Component {
+    template({ routes }) {
+        return routes
+            .map(({ path, tag, title }) => isRoute(path) ? `<${tag} title="${title}"></${tag}>` : '')
+            .join('')
     }
 }

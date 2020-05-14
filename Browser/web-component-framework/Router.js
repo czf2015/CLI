@@ -1,5 +1,4 @@
 
-import { Router } from './framework/index.js'
 import '../pages/demoPage/_demo.js'
 import '../pages/homePage/index.js'
 
