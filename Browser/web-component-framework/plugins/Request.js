@@ -1,11 +1,11 @@
-import { integrate } from './utils.js'
+import { integrate } from '../utils/index.js'
 
 const params = (data, options) => {
     return options ? options : { body: JSON.stringify(data) }
 }
 
 // 请求
-export class Request {
+export default class Request {
     static get(url, data, options) {
         return fetch(url, {
             method: 'get',

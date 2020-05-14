@@ -16,16 +16,12 @@ npm run start
 ```
 
 
-## 计划列表
+## 计划完成
 
 - [ ] 虚拟dom
-- [ ] 是
+
 
 ## 结构说明
-
-
-- lib -- [框架库函数](./lib/framework/index.js)，[最核心的部分](./lib/framework/index.mjs)是Component及Router(使用其既可以满足基本的开发需求)，另外包含API、Request、DB、Store等类的封装(满足拓展开发需求)
-
 
 - config -- 配置文件
     |__ apis.js -- 前端调用接口
@@ -58,7 +54,12 @@ npm run start
 
 - utils -- 工具函数
 
-- plugins -- 第三方
+- plugins -- 独立包
+    |__ Request.js 处理请求
+    |__ API.js 接口
+    |__ DB.js 数据库
+    |__ Store.js 状态管理
+    |__ List.js 列表
 
 - static -- 静态文件
 

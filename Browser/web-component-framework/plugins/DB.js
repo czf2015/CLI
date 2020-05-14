@@ -1,6 +1,4 @@
 // docs: [IndexedDB 教程](https://cloud.tencent.com/developer/article/1190562)
-import { noop } from './utils.js'
-
 /* 对不同浏览器的indexedDB进行兼容 */
 const indexedDB = window.indexedDB || window.webkitindexedDB || window.mozIndexedDB || window.msIndexedDB
 // 判断浏览器是否支持indexedDB
@@ -8,7 +6,7 @@ if (!indexedDB) {
     console.log('你的浏览器不支持IndexedDB');
 }
 
-export class DB {
+export default class DB {
     constructor(dbName, dbVersion = 1) {
         this.dbName = dbName
         this.dbVersion = dbVersion
@@ -28,7 +26,7 @@ export class DB {
         }
     }
     // 
-    /* private */async acquiesce(request, tip, upgradeHandler = noop) {
+    /* private */async acquiesce(request, tip, upgradeHandler) {
         return new Promise((resolve, reject) => {
             request.onerror = (error) => {
                 console.error(error)
@@ -38,9 +36,11 @@ export class DB {
                 console.info(`${tip}成功`)
                 resolve(event.target.result);
             };
-            request.onupgradeneeded = (event) => {
+            request.onupgradeneeded = async (event) => {
                 console.info(`DB version changed to ${this.dbVersion}`);
-                upgradeHandler(event.target.result)
+                if (typeof upgradeHandler === 'function') {
+                    return await upgradeHandler(event.target.result)
+                }
             };
         })
     }

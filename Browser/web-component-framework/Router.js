@@ -1,5 +1,5 @@
 
-import { Router } from './lib/framework/index.mjs'
+import { Router } from './lib/framework/index.js'
 import '../pages/demoPage/_demo.js'
 import '../pages/homePage/index.js'
 

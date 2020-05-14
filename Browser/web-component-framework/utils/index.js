@@ -1,3 +1,7 @@
+export const isType = (value, type) => typeof type === 'function'
+    ? value instanceof type
+    : typeof value === type
+
 export const deepCopy = (oldObj) => {
     const list = []
 
@@ -64,7 +68,6 @@ export const format = (raw, fields, convert) => {
     }(raw, fields, convert)
 }
 
-
 export const adapt = (raw, transform) => {
     const list = []
 
@@ -96,5 +99,74 @@ export const adapt = (raw, transform) => {
     }(raw, transform)
 }
 
+export const execute = (handle, task) => Array.isArray(task)
+    ? task.map(handle)
+    : handle(task)
+
 export const contain = (source, target) => Object.keys(target)
     .every(key => source[key] === target[key])
+
+export const integrate = async (rule, cause) => {
+    const h = cause => rule.handle ? rule.handle(cause) : cause
+
+    if (rule.prerequisites && rule.prerequisites.length > 0) {
+        switch (rule.mode) {
+            case 'serial':
+                for (let i = 0; i < rule.prerequisites.length; i++) {
+                    cause = await integrate(rule.prerequisites[i], cause)
+                }
+                return h(cause)
+            case 'parallel':
+            case 'select':
+                const promises = rule.prerequisites.map(async (prerequisite) => await integrate(prerequisite, cause))
+                const method = rule.mode === 'parallel' ? 'all' : 'race'
+                return Promise[method](promises).then(h)
+            default:
+                throw `${rule.mode} is not one type of modes: serial, parallel, select`
+        }
+    } else {
+        return h(cause)
+    }
+}
+
+export const attrs = (properties, mode = false) => {
+    if (mode) {
+        const attributes = {}
+        properties.trim().replace(/[\'\"]/g, '').split(/\s+/)
+            .forEach(property => {
+                const [attribute, value] = property.split('=')
+                attributes[attribute] = value
+            })
+        return attributes
+    } else {
+        return Object.entries(properties)
+            .map(([attribute, value]) => `${attribute}="${value}"`)
+            .join(' ')
+    }
+}
+
+export const html = (raw, mode = false) => {
+    if (mode) {
+        // 先区分tag property 
+        // 再处理children 
+        // const words = text.split(/[\b]*)/g)
+        // for (let i = 0; i < words.length; i++) {
+        //     const word = words[i]
+        //     const p = word.indexOf('=')
+        //     if (p == -1) {
+        //         return word.replace(/[><\/]*/g, '')
+        //     } else {
+        //         return [word.slice(0, p), word.slice(p)]
+        //     }
+        // }
+
+    } else {
+        const h = ({ render, params, text }) => render ? render(params) : text || ''
+        if (Array.isArray(raw)) {
+            return raw.map(html).join('')
+        } else {
+            const { tag, properties, children } = raw
+            return `<${tag} ${attrs(properties)}>${children ? html(children) : h(raw)}</${tag}>`
+        }
+    }
+}

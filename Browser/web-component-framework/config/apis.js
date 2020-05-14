@@ -1,4 +1,4 @@
-import { API } from '../lib/framework/index.js'
+import API from '../plugins/API.js'
 import * as models from '../models/index.js'
 import * as services from '../services/index.js'
 

@@ -1,4 +1,4 @@
-import { Component } from '../lib/framework/index.mjs'
+import { Component } from '../lib/framework/index.js'
 
 
 export default class AddList extends Component {

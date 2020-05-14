@@ -1,4 +1,4 @@
-import { DB } from '../lib/framework/index.js'
+import DB from '../plugins/DB.js'
 
 const dbName = 'test'
 const dbVersion = 4

@@ -1,5 +1,3 @@
-export function isType(type) {
-    // 
-}
-
-export function type(value)
+export const isType = (value, type) => typeof type === 'function'
+    ? value instanceof type
+    : typeof value === type

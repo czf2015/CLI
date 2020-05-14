@@ -1,4 +1,4 @@
-import { Component } from '../lib/framework/index.mjs'
+import { Component } from '../lib/framework/index.js'
 
 const attrs = properties => Object.entries(properties)
     .map(([attribute, value]) => `${attribute}="${value}"`)

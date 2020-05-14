@@ -1,7 +1,58 @@
-import { format, adapt, deepCopy, keyValue, keyValues, isType, typeMeta } from './utils.js'
+import { isType, keyValues, keyValue, deepCopy, format, adapt } from '../utils/index.js'
+
+const typeMeta = meta => {
+    switch (typeof meta) {
+        case 'boolean':
+            return {
+                type: 'boolean',
+                required: false,
+                default: meta,
+                value: meta,
+            }
+        case 'number':
+            return {
+                type: 'number',
+                required: false,
+                default: meta,
+                value: meta,
+            }
+        case 'string':
+            return {
+                type: 'string',
+                required: false,
+                default: meta,
+                value: meta,
+            }
+        case 'function':
+            return {
+                type: meta,
+                required: false,
+                default: new meta(),
+                value: new meta(),
+            }
+        case 'object':
+            if (Array.isArray(meta)) {
+                return {
+                    type: Array,
+                    required: false,
+                    default: meta,
+                    value: meta
+                }
+            } else {
+                return {
+                    type: meta.type || 'any',
+                    required: meta.required || false,
+                    default: meta.default,
+                    value: meta.value
+                }
+            }
+        default:
+            break
+    }
+}
 
 // 状态管理
-export class Store {
+export default class Store {
     constructor(state) {
         this.state = { ...state }
         this.records = {}

@@ -1,4 +1,4 @@
-import { Request } from '../lib/framework/index.js'
+import Request from '../plugins/Request.js'
 import db from '../config/db.js'
 
 

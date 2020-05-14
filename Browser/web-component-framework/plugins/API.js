@@ -1,7 +1,7 @@
-import { isType, execute, List } from './utils.js'
+import { isType, execute } from '../utils/index.js'
+import List from '../plugins/List.js'
 
-
-export class API extends List {
+export default class API extends List {
     constructor(Model, list = []) {
         super(list)
         this.Model = Model

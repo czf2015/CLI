@@ -1,4 +1,4 @@
-import { Store } from '../lib/framework/index.js'
+import Store from '../plugins/Store.js'
 import purchase from './modules/purchase.js'
 import course from './modules/course.js'
 import entertainment from './modules/entertainment.js'
