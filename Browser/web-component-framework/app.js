@@ -8,8 +8,8 @@ class AppContainer extends Component {
         return (
 `<app-header operation="add">header</app-header>
 <main class="app-container">
-    <h1 on-click = "add">Click Me!</h1>
-    <app-router v-for = " routes " v-key = " item.tag">{ item.title}</app-router>
+    <h1 @click={add}>Click Me!</h1>
+    <app-router *for={routes} key={item.tag}></app-router>
 </main>
 <app-footer>footer</app-footer>        
 
@@ -26,9 +26,10 @@ class AppContainer extends Component {
     listen() {
         {   // 点击click，验证单向传递
             this.header = this.$('app-header')
-            this.$('.app-container > h1').addEventListener('click', () => {   
-                const r = this.$('[v-for="routes"]').dataset
-                console.log(r)  
+            this.$('.app-container > h1').addEventListener('click', (e) => {   
+                console.log('click')
+                const el = this.$('[*for={routes}]')
+                console.log(el)  
             })
         }
     }
@@ -38,5 +39,5 @@ customElementRegister({
     'app-container': AppContainer,
     // 'app-header': Header,
     // 'app-footer': Footer,
-    // 'app-router': Router,
+    'app-router': Router,
 })

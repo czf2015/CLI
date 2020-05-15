@@ -24,19 +24,13 @@ class Component extends HTMLElement {
             }
         })
 
-        this.shadow.innerHTML = this.render(this.template())
+        this.shadow.innerHTML = this.render()
         this.listen()
 
         this.once()
     }
 
-    render(data, template) {
-        template = '${.name . name .age}'
-        const h = data => template
-            .replace(/\$\{\s*((\.)(\S*)[\s\S]*\S*)\s*\}/g, ($, $1, $2, $3) =>
-                $1.replace(/(\.)(\S*)/g, ($, $1, $2) => $2 ? data[$2] : data)
-            )
-        console.log(h({ name: 'czf', age: 34 }))
+    render() {
         return this.template()
             // .replace(/\>\s*\</g, _ => _.replace(/\s+/g, ''))
             .replace(/\s*=\s*/g, '=') // 去除等号两边空格
@@ -81,9 +75,12 @@ const isRoute = (path) => {
 }
 
 class Router extends Component {
-    template({ routes }) {
-        return routes
-            .map(({ path, tag, title }) => isRoute(path) ? `<${tag} title="${title}"></${tag}>` : '')
-            .join('')
+    template() {
+        // return routes
+        //     .map(({ path, tag, title }) => isRoute(path) ? `<${tag} title="${title}"></${tag}>` : '')
+        //     .join('')
+        return (
+            `<route *for={({ path, tag, title }) in routes} is={tag} *if={isRoute(path)} :title={title}>{title}</route>`
+        )
     }
 }
