@@ -2,8 +2,10 @@
 export default class Task {
     constructor(name) {
         this.name = name
-        this.results = []
+        this.status = 'undo' // 'pendding' | 'suspend' | 'done'
     }
 
-    run() {}
+    run() {
+        this.status = 'done'
+    }
 }

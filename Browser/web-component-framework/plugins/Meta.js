@@ -3,7 +3,7 @@ export default class Meta {
         this.meta = meta
     }
 
-    get type() {
+    define() {
         const { meta } = this
         switch (typeof meta) {
             case 'boolean':
@@ -13,6 +13,7 @@ export default class Meta {
                     default: meta,
                     value: meta,
                 }
+
             case 'number':
                 return {
                     type: 'number',
@@ -20,6 +21,7 @@ export default class Meta {
                     default: meta,
                     value: meta,
                 }
+
             case 'string':
                 return {
                     type: 'string',
@@ -27,6 +29,7 @@ export default class Meta {
                     default: meta,
                     value: meta,
                 }
+
             case 'function':
                 return {
                     type: meta,
@@ -34,6 +37,7 @@ export default class Meta {
                     default: new meta(),
                     value: new meta(),
                 }
+
             case 'object':
                 if (Array.isArray(meta)) {
                     return {

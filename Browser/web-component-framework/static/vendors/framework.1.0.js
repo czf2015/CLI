@@ -4,62 +4,38 @@
 class Component extends HTMLElement {
     constructor() {
         super();
+        this.init()
+    }
 
+    init() {
+        // 创建
         this.shadow = this.attachShadow({ mode: 'closed' });
-
-        // props属性
-        const props = {}
-        const atrributes = this.getAttributeNames()
-        atrributes.forEach(attribute => props[attribute] = this.getAttribute(attribute))
-
-        // 页面状态
-        this.state = { ...this.data(), ...props }
-
-        // 单向传递 props可传递数据、函数及更复杂的对象
-        this.props = new Proxy(props, {
-            set: (target, key, receiver) => {
-                const retVal = Reflect.set(target, key, receiver)
-                this.setState(target)
-                return retVal;
-            }
-        })
-
-        this.shadow.innerHTML = this.render()
-        this.listen()
-
+        this.state = this.data()
+        // 更新
+        this.setState(this.props())
+        const template = this.template(this.state).replace(/\s*=\s*/g, '=')
+        // console.log(template)
+        this.directive(template)
+        this.bindView(template)
+        this.addEvent(template)
+        // 
         this.once()
     }
 
-    /* private */directive() {
-        // 
+    data() {
+        return {}
+     }
+
+    props(data) {
+        if (data) {
+            Object.assign(this.state, data)
+        } else {
+            const props = {}
+            const atrributes = this.getAttributeNames()
+            atrributes.forEach(attribute => props[attribute] = this.getAttribute(attribute))
+            Object.assign(this.state, props)
+        }
     }
-
-    /* private */bindView() {
-        // 
-    }
-
-    /* private */addOn() {
-        // 
-    }
-
-    get $props() {
-        // 
-        const props = {}
-        const atrributes = this.getAttributeNames()
-        atrributes.forEach(attribute => props[attribute] = this.getAttribute(attribute))
-        return props
-    }
-
-    render() {
-        return this.template()
-            // .replace(/\>\s*\</g, _ => _.replace(/\s+/g, ''))
-            .replace(/\s*=\s*/g, '=') // 去除等号两边空格
-        // .replace(/\>\s*(\{[\s\S]*\})\s*\</g, _ => _.replace(/\s+/g, '')) // 去除{}空格
-    }
-
-    template(state) { }
-
-    data() { }
 
     setState(data) {
         if (typeof data === 'object') {
@@ -69,15 +45,43 @@ class Component extends HTMLElement {
         }
     }
 
+    template(state) { }
+
+    /* private */directive(template) {
+        const matches = template.match(/\s+\*([a-zA-Z\_]+)=\"{1}([\S]+[^\"]*[\S]+)\"{1}/)
+        // console.log(matches[0])
+    }
+
+    /* private */bindView(template) {
+        const matches = template.match(/\s+\:([a-zA-Z\_]+)=\"{1}([\S]+[^\"]*[\S]+)\"{1}/)
+        // console.log(matches[0])
+    }
+
+    /* private */addEvent(template) {
+        const matches = template.match(/\s+\@([a-zA-Z\_]+)=\"{1}(\S+)\"{1}/)
+        // console.log(matches[0])
+    }
+
+    // 根据state变化计算可变节点
+    /* private */diff() {
+    }
+
+    render() {
+        return this.template()
+            // .replace(/\>\s*\</g, _ => _.replace(/\s+/g, ''))
+            .replace(/\s*=\s*/g, '=') // 去除等号两边空格
+        // .replace(/\>\s*(\{[\s\S]*\})\s*\</g, _ => _.replace(/\s+/g, '')) // 去除{}空格
+    }
+
+    $(selector, isAll = false) {
+        return isAll ? this.shadow.queryAllSelector(selector) : this.shadow.querySelector(selector)
+    }
+
     // 每次状态更新，需要重新绑定
     listen() { }
 
-    // 仅初始化完成时执行一次
+    // 仅在初始化完成时执行一次
     once() { }
-
-    $(selector) {
-        return this.shadow.querySelector(selector)
-    }
 }
 
 const customElementRegister = (customs) => Object.entries(customs)

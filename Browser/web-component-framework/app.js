@@ -7,10 +7,10 @@ class AppContainer extends Component {
     template() {
         return (
 `<app-header operation="add">header</app-header>
-<main class="app-container">
-    <h1 @click={add}>Click Me!</h1>
-    <app-router *for={routes} key={item.tag}></app-router>
-</main>
+    <main class="app-container">
+        <h1 @click="add">Click Me!</h1>
+        <app-router *for="item in routes" :key="item.tag"></app-router>
+    </main>
 <app-footer>footer</app-footer>        
 
 <style>
