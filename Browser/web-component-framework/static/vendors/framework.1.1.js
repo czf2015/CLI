@@ -1,6 +1,13 @@
 
 // docs: [HTMLElement](https://www.w3school.com.cn/xmldom/dom_htmlelement.asp)
 
+const getAttributes = (node) => {
+    const props = {}
+    const atrributes = node.getAttributeNames()
+    atrributes.forEach(attribute => props[attribute] = node.getAttribute(attribute))
+    return props
+}
+
 class Component extends HTMLElement {
     constructor() {
         super();
@@ -35,15 +42,9 @@ class Component extends HTMLElement {
 
         this.shadow.innerHTML = template
 
-        this.directives(template)
-        this.viewModel(template)
-        this.listeners(template)
+        this.mvvm()
 
-        const props = {}
-        const atrributes = this.getAttributeNames()
-        atrributes.forEach(attribute => props[attribute] = this.getAttribute(attribute))
-
-        this.props = new Proxy(props, {
+        this.props = new Proxy(getAttributes(this), {
             set: (target, key, receiver) => {
                 const retVal = Reflect.set(target, key, receiver)
                 this.update({ key: receiver })
@@ -51,7 +52,7 @@ class Component extends HTMLElement {
             }
         })
 
-        this.setState(props)
+        this.setState(this.props)
     }
 
     async mount() { }
@@ -69,66 +70,50 @@ class Component extends HTMLElement {
         }
     }
 
-    /* private */$(selector, isAll = false) {
-        return isAll ? this.shadow.queryAllSelector(selector) : this.shadow.querySelector(selector)
-    }
-
-    /* private */directives(template) {
-        // const [_, directive, value] = template.match(/\s+\*([a-zA-Z\_]+)=\"{1}([^\"]+)\"{1}/) || []
-        // switch (directive) {
-        //     case 'for':
-        //         console.log('------directive: for---------')
-        //         this.data.value.map(item => {
-        //             return template.replace(/\s*\*for=\"([^\"]+){1}\"{1}/, '')
-        //                 .replace(/\>{1}\s*\{([\s\S]*)\}\s*\<{1}/, ($, $1) => `>${eval($1)}<`)
-        //                 .replace(/\s*\:key=\"{1}([\s\S]*)\"{1}/, ($, $1) => ` key="${eval($1)}"`)
-        //         })
-        //         break
-        //     case 'if':
-        //         console.log('------directive: if---------')
-        //         return template.replace(/\s*\*if=\"([^\"]+){1}\"{1}/, value ? '' : ' style="display: none;"')
-        //         break
-        //     default:
-        //         break
-        // }
-    }
-
-    /* private */viewModel(node) {
-        // const [_, attribute, value] = template.match(/\s+\:([a-zA-Z\_]+)=\"{1}([^\"]+)\"{1}/) || []
-        // console.log({ attribute, value })
-        const h = (node) => {
-            for (let i = 0; i < node.atrributes.length; i++) {
-                if (attributes[i].matches(/\:[a-zA-Z\-]+/)) {
+    /* private */mvvm() {
+        const analyze = (node) => {
+            const vm = {
+                node,
+                attributes: {},
+                listeners: {},
+                dataset: {},
+            }
+            node.getAttributeNames().forEach(attribute => {
+                if (attribute.match(/\:([a-zA-Z\-]+)/)) {
                     // 
+                    vm.attributes[attribute] = node.getAttribute(attribute)
                 }
-                if (attributes[i].matches(/\:[a-zA-Z\-]+/)) {
+                if (attribute.match(/\:([a-zA-Z\-]+)/)) {
                     // 
+                    vm.dataset[attribute] = node.getAttribute(attribute)
                 }
-                if (attributes[i].matches(/\@[a-zA-Z\-]+/)) {
+                if (attribute.match(/\@([a-zA-Z\-]+)/)) {
                     // 
+                    vm.listeners[attribute] = node.getAttribute(attribute)
+                }
+            })
+            if (node.childNodes && node.childNodes.length > 0) {
+                // console.log(Array.isArray(node.childNodes))
+                // vm.children = node.childNodes.map(analyze)
+                vm.children = []
+                for (const childNode of node.childNodes) {
+                    return analyze(childNode)
                 }
             }
-            if (node.children && node.children.length > 0) {
-                this.vm = {}
-            }
+            return vm
         }
-        this.vm = {
-            children: 
-        }
-    }
-
-    /* private */listeners(template) {
-        const [_, event, handler] = template.match(/\s+\@([a-zA-Z\_]+)=\"{1}(\S+)\"{1}/) || []
-        console.log({ event, handler })
+        this.vm = analyze(this)
+        console.log(this.vm)
     }
 
     // 根据state变化计算可变节点
     /* private */async diff() {
-        this.vm
+        return await []
     }
 
     /* private */async render() {
-        await this.diff().forEach(node => {
+        const nodes = await this.diff()
+        nodes.forEach(node => {
             const { selector, attribute, value } = node
             this.$(selector)[attribute] = value
         })

@@ -4,7 +4,7 @@ import Router from './Router.js'
 
 
 class AppContainer extends Component {
-    template({ routes }) {
+    template(/* { routes } */) {
         return (
             `<app-header operation="add">header</app-header>
     <main class="app-container">

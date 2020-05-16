@@ -1,9 +1,17 @@
+import { attrs, html } from '../utils/index.js'
+
 export default class Node {
-    constructor(name) {
-        this.name = name;
-        this.computed = false;
-        this.indegree = 0;
-        this.inputs = new Set;
-        this.outputs = new Set;
+    constructor(tag, attributes = {}, children = []) {
+        this.tag = tag
+        this.attributes = attributes
+        this.children = children
+    }
+
+    renderHTML() {
+        return html(this)
+    }
+
+    static parseXML(xml) {
+        return html(xml, true)
     }
 }

@@ -129,44 +129,100 @@ export const integrate = async (rule, cause) => {
     }
 }
 
-export const attrs = (properties, mode = false) => {
-    if (mode) {
-        const attributes = {}
-        properties.trim().replace(/[\'\"]/g, '').split(/\s+/)
-            .forEach(property => {
-                const [attribute, value] = property.split('=')
-                attributes[attribute] = value
-            })
-        return attributes
+export const getAttributes = (attrs) => {
+    const attributes = {}
+    attrs.trim().replace(/[\'\"]/g, '').split(/\s+/)
+        .forEach(attr => {
+            const [attribute, value] = attr.split('=')
+            attributes[attribute] = value
+        })
+    return attributes
+}
+
+export const setAttributes = (attributes) =>
+    Object.entries(attributes)
+        .map(([attribute, value]) => `${attribute}="${value}"`)
+        .join(' ')
+
+
+export const renderHTML = (node) => {
+    const h = ({ render, params, text }) => render ? render(params) : text || ''
+    if (Array.isArray(node)) {
+        return node.map(renderHTML).join('')
     } else {
-        return Object.entries(properties)
-            .map(([attribute, value]) => `${attribute}="${value}"`)
-            .join(' ')
+        const { tag, attributes, children } = node
+        return `<${tag} ${attrs(attributes)}>${children ? renderHTML(children) : h(node)}</${tag}>`
     }
 }
 
-export const html = (raw, mode = false) => {
-    if (mode) {
-        // 先区分tag property 
-        // 再处理children 
-        // const words = text.split(/[\b]*)/g)
-        // for (let i = 0; i < words.length; i++) {
-        //     const word = words[i]
-        //     const p = word.indexOf('=')
-        //     if (p == -1) {
-        //         return word.replace(/[><\/]*/g, '')
-        //     } else {
-        //         return [word.slice(0, p), word.slice(p)]
-        //     }
-        // }
+export const parseXML = (xml) => {
+    const fragments = []
+    let cache = []
+    let flag = false
+    const len = xml.length
+    for (let i = 0; i < len; i++) {
+        if (flag) {
+            switch (xml[i]) {
+                case '/':
+                    cache.push('/')
+                    break
+                case '>':
+                    cache.push('>')
+                    fragments.push(cache.join(''))
+                    cache = []
+                    flag = false
+                    break
+                case ' ':
+                    if (xml[i - 1] !== ' ') {
+                        cache.push(' ')
+                    }
+                    break
+                default:
+                    cache.push(xml[i])
+                    break
+            }
+        }
 
-    } else {
-        const h = ({ render, params, text }) => render ? render(params) : text || ''
-        if (Array.isArray(raw)) {
-            return raw.map(html).join('')
-        } else {
-            const { tag, properties, children } = raw
-            return `<${tag} ${attrs(properties)}>${children ? html(children) : h(raw)}</${tag}>`
+        switch (xml[i]) {
+            case ' ':
+                if (xml[i - 1] !== '') {
+                    cache.push('<')
+                }
+                break
+            case '<':
+                fragments.push(cache.join(''))
+                cache = []
+                flag = true
+                cache.push('<')
+                break
+            default:
+                cache.push(xml[i])
+                break
         }
     }
+
+    const node = {}
+    
+    // 再处理children 
+    fragments.forEach(fragment => {
+        // 
+        if (fragment.match(/^\<\s*([a-zA-Z\-]+)([^\\]+)\>$/)) {
+            // 
+            const [_, tag, $2] = fragment.match(/^\<\s*([a-zA-Z\-]+)([^\\]+)\>$/)
+            const attributes = getAttributes($2)
+        }
+
+        if (fragment.match(/^\<\s*([a-zA-Z\-]+)\\\s*\>$/)) {
+            // 
+            const [_, tag] = fragment.match(/^\<\s*([a-zA-Z\-]+)\\\s*\>$/)
+        }
+
+        if (fragment.match(/^\<\s*\/([a-zA-Z\-]+)\s*\>$/)) {
+            // 
+            const [_, tag] = fragment.match(/^\<\s*\/([a-zA-Z\-]+)\s*\>$/)
+        }
+
+        text = fragment
+    })
+
 }
