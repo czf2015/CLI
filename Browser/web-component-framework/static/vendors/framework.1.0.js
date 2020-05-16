@@ -11,20 +11,19 @@ class Component extends HTMLElement {
         // 创建
         this.shadow = this.attachShadow({ mode: 'closed' });
         this.state = this.data()
-        // 更新
-        this.setState(this.props())
-        const template = this.template(this.state).replace(/\s*=\s*/g, '=')
+        const template = this.template(this.state)
+            .replace(/\>\s*\</g, _ => _.replace(/\s+/g, ''))
+            .replace(/\s*=\s*/g, '=')
+            .replace(/\>\s*(\{[\s\S]*\})\s*\</g, _ => _.replace(/\s+/g, '')) // 去除{}空格
         // console.log(template)
         this.directive(template)
-        this.bindView(template)
-        this.addEvent(template)
-        // 
+        this.viewModel(template)
+        this.listener(template)
+        // 更新
+        this.setState(this.props())
+        this.shadow.innerHTML = template
         this.once()
     }
-
-    data() {
-        return {}
-     }
 
     props(data) {
         if (data) {
@@ -37,10 +36,26 @@ class Component extends HTMLElement {
         }
     }
 
+    data() {
+        return {}
+    }
+
+
+    handlers({ inputVal, message }) {
+        return {
+            add() {
+                console.log(message)
+            },
+            pop() {
+                console.log('pop')
+            }
+        }
+    }
+
     setState(data) {
         if (typeof data === 'object') {
             Object.assign(this.state, data)
-            // this.shadow.innerHTML = template;
+            this.render()
             this.listen()
         }
     }
@@ -48,18 +63,40 @@ class Component extends HTMLElement {
     template(state) { }
 
     /* private */directive(template) {
-        const matches = template.match(/\s+\*([a-zA-Z\_]+)=\"{1}([\S]+[^\"]*[\S]+)\"{1}/)
-        // console.log(matches[0])
+        let temp
+        const title = 'title'
+        const [_, directive, value] = template.match(/\s+\*([a-zA-Z\_]+)=\"{1}([^\"]+)\"{1}/) || []
+        console.log({ directive, value })
+        switch (directive) {
+            case 'for':
+                console.log('------directive: for---------')
+                // const [list, item] = value.trim().split(/\s+in\s+/g)
+                // debugger
+                temp = [value].map(item => {
+                    return template.replace(/\s*\*for=\"([^\"]+){1}\"{1}/, '')
+                        .replace(/\>{1}\s*\{([\s\S]*)\}\s*\<{1}/, ($, $1) => `>${eval($1)}<`)
+                        .replace(/\s*\:key=\"{1}([\s\S]*)\"{1}/, ($, $1) => ` key="${eval($1)}"`)
+                })
+                console.log(temp)
+                break
+            case 'if':
+                console.log('------directive: if---------')
+                temp = template.replace(/\s*\*if=\"([^\"]+){1}\"{1}/, value ? '' : ' style="display: none;"')
+                console.log(temp)
+                break
+            default:
+                break
+        }
     }
 
-    /* private */bindView(template) {
-        const matches = template.match(/\s+\:([a-zA-Z\_]+)=\"{1}([\S]+[^\"]*[\S]+)\"{1}/)
-        // console.log(matches[0])
+    /* private */viewModel(template) {
+        const [_, attribute, value] = template.match(/\s+\:([a-zA-Z\_]+)=\"{1}([^\"]+)\"{1}/) || []
+        console.log({ attribute, value })
     }
 
-    /* private */addEvent(template) {
-        const matches = template.match(/\s+\@([a-zA-Z\_]+)=\"{1}(\S+)\"{1}/)
-        // console.log(matches[0])
+    /* private */listener(template) {
+        const [_, event, handler] = template.match(/\s+\@([a-zA-Z\_]+)=\"{1}(\S+)\"{1}/) || []
+        console.log({ event, handler })
     }
 
     // 根据state变化计算可变节点
@@ -67,10 +104,11 @@ class Component extends HTMLElement {
     }
 
     render() {
-        return this.template()
-            // .replace(/\>\s*\</g, _ => _.replace(/\s+/g, ''))
-            .replace(/\s*=\s*/g, '=') // 去除等号两边空格
-        // .replace(/\>\s*(\{[\s\S]*\})\s*\</g, _ => _.replace(/\s+/g, '')) // 去除{}空格
+        // this.shadow.innerHTML = template
+        // return this.template()
+        //     // .replace(/\>\s*\</g, _ => _.replace(/\s+/g, ''))
+        //     .replace(/\s*=\s*/g, '=') // 去除等号两边空格
+        // // .replace(/\>\s*(\{[\s\S]*\})\s*\</g, _ => _.replace(/\s+/g, '')) // 去除{}空格
     }
 
     $(selector, isAll = false) {
@@ -99,12 +137,9 @@ const isRoute = (path) => {
 }
 
 class Router extends Component {
-    template() {
-        // return routes
-        //     .map(({ path, tag, title }) => isRoute(path) ? `<${tag} title="${title}"></${tag}>` : '')
-        //     .join('')
+    template({ routes }) {
         return (
-            `<route *for={({ path, tag, title }) in routes} is={tag} *if={isRoute(path)} :title={title}>{title}</route>`
+            `<route *for="routes" *if="isRoute(.path)" :key=".tag">{.title}</route>`
         )
     }
 }

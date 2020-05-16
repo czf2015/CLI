@@ -4,12 +4,15 @@ import Router from './Router.js'
 
 
 class AppContainer extends Component {
-    template() {
+    template({ routes }) {
         return (
-`<app-header operation="add">header</app-header>
+            `<app-header operation="add">header</app-header>
     <main class="app-container">
-        <h1 @click="add">Click Me!</h1>
-        <app-router *for="item in routes" :key="item.tag"></app-router>
+        <h1 @click="add" :message="message">Click Me!</h1>
+        <app-router *if="routes" :routes="routes"></app-router>
+        <ul>
+            <li *for="list" :key=".">{.}</li>
+        </ul>
     </main>
 <app-footer>footer</app-footer>        
 
@@ -26,10 +29,8 @@ class AppContainer extends Component {
     listen() {
         {   // 点击click，验证单向传递
             this.header = this.$('app-header')
-            this.$('.app-container > h1').addEventListener('click', (e) => {   
+            this.$('.app-container > h1').addEventListener('click', (e) => {
                 console.log('click')
-                const el = this.$('[*for={routes}]')
-                console.log(el)  
             })
         }
     }

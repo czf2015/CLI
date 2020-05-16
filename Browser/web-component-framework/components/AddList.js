@@ -5,7 +5,7 @@ export default class AddList extends Component {
                 <input type="text" placeholder="hello" :value="inputVal" :class="theme" @focus="pop" />
                 <button type="button">add</button>
                 <ul>
-                    <li *for="item in list" :key="item">{item}</li>
+                    <li *for="list" :key=".">{.}</li>
                 </ul>
             </div>`
         )
