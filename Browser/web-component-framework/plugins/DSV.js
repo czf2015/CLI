@@ -39,5 +39,4 @@ export default class DSV {
     get records() {
         return [this.names, ...this.decode(this.separator)]
     }
-
 }

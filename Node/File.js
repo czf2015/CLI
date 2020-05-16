@@ -94,11 +94,11 @@ function remove(src) {
         if (isFile(src)) {
             fs.unlinkSync(src)
         } else {
-                fs.readdirSync(src).forEach(path => {
-                    const _src = `${src}/${path}`
-                    remove(_src)
-                })
-    
+            fs.readdirSync(src).forEach(path => {
+                const _src = `${src}/${path}`
+                remove(_src)
+            })
+
             fs.rmdirSync(src)
         }
     } else {
@@ -106,7 +106,7 @@ function remove(src) {
     }
 }
 
-function rename(src,dst) {
+function rename(src, dst) {
     if (isExist(src)) {
         fs.renameSync(src, dst)
     } else {
@@ -140,7 +140,7 @@ function find(src, filename) {
                         if (err) throw err
                         paths.forEach(path => {
                             const _src = `${src}/${path}`
-                            find(_src, filename)                            
+                            find(_src, filename)
                         })
                     })
                 }

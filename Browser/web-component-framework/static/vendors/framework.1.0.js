@@ -30,11 +30,31 @@ class Component extends HTMLElement {
         this.once()
     }
 
+    /* private */directive() {
+        // 
+    }
+
+    /* private */bindView() {
+        // 
+    }
+
+    /* private */addOn() {
+        // 
+    }
+
+    get $props() {
+        // 
+        const props = {}
+        const atrributes = this.getAttributeNames()
+        atrributes.forEach(attribute => props[attribute] = this.getAttribute(attribute))
+        return props
+    }
+
     render() {
         return this.template()
             // .replace(/\>\s*\</g, _ => _.replace(/\s+/g, ''))
             .replace(/\s*=\s*/g, '=') // 去除等号两边空格
-            // .replace(/\>\s*(\{[\s\S]*\})\s*\</g, _ => _.replace(/\s+/g, '')) // 去除{}空格
+        // .replace(/\>\s*(\{[\s\S]*\})\s*\</g, _ => _.replace(/\s+/g, '')) // 去除{}空格
     }
 
     template(state) { }

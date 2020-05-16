@@ -2,7 +2,8 @@ import { contain } from '../utils/index.js'
 
 
 export default class List {
-    constructor(list = []) {
+    constructor(name, list = []) {
+        this.name = name
         this.list = list
     }
 

@@ -9,7 +9,7 @@ const patterns = {
     expression: /\$\{+[^\}]+\}+/,
     text: /\<([a-z]+>)[\s\S]+/,
 }
-
+// TOFIX
 export default class XML {
     constructor(template) {
         this.template = template
