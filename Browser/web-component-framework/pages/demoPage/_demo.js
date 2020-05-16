@@ -4,7 +4,7 @@ import store from '../../store/index.js'
 
 
 class DemoPage extends DataBind {
-    async once() {
+    async init() {
         {
             // USER.get().then(res => {
             //     console.log(res)

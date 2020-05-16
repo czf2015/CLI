@@ -5,64 +5,75 @@ class Component extends HTMLElement {
     constructor() {
         super();
         this.init()
+        this.create()
+        this.mount()
     }
 
-    init() {
-        // 创建
-        this.shadow = this.attachShadow({ mode: 'closed' });
-        this.state = this.data()
-        const template = this.template(this.state)
-            .replace(/\>\s*\</g, _ => _.replace(/\s+/g, ''))
-            .replace(/\s*=\s*/g, '=')
-            .replace(/\>\s*(\{[\s\S]*\})\s*\</g, _ => _.replace(/\s+/g, '')) // 去除{}空格
-        // console.log(template)
-        this.directive(template)
-        this.viewModel(template)
-        this.listener(template)
-        // 更新
-        this.setState(this.props())
-        this.shadow.innerHTML = template
-        this.once()
-    }
-
-    props(data) {
-        if (data) {
-            Object.assign(this.state, data)
-        } else {
-            const props = {}
-            const atrributes = this.getAttributeNames()
-            atrributes.forEach(attribute => props[attribute] = this.getAttribute(attribute))
-            Object.assign(this.state, props)
-        }
-    }
-
-    data() {
-        return {}
-    }
-
-
-    handlers({ inputVal, message }) {
+    // @return { data, methods }
+    async init() {
         return {
-            add() {
-                console.log(message)
-            },
-            pop() {
-                console.log('pop')
+            data: {},
+            methods: {
+                fetch() { }
             }
         }
     }
+
+    /* private */create() {
+        const { data, methods } = this.init()
+
+        // 创建
+        this.shadow = this.attachShadow({ mode: 'closed' });
+
+        this.state = data
+        this.methods = methods
+
+        const template = this.template()
+            .replace(/\>\s*\</g, _ => _.replace(/\s+/g, ''))
+            .replace(/\s*=\s*/g, '=')
+            .replace(/\>\s*(\{[\s\S]*\})\s*\</g, _ => _.replace(/\s+/g, '')) // 去除{}空格
+
+        this.directives(template)
+        this.viewModel(template)
+        this.listeners(template)
+
+        const props = {}
+        const atrributes = this.getAttributeNames()
+        atrributes.forEach(attribute => props[attribute] = this.getAttribute(attribute))
+
+        this.props = new Proxy(props, {
+            set: (target, key, receiver) => {
+                const retVal = Reflect.set(target, key, receiver)
+                this.update({ key: receiver })
+                return retVal;
+            }
+        })
+
+        this.setState(props)
+
+        // this.shadow.innerHTML = template
+    }
+
+    mount() { }
+
+    update(data) {
+        this.setState(data)
+    }
+
+    template(state) { }
 
     setState(data) {
         if (typeof data === 'object') {
             Object.assign(this.state, data)
             this.render()
-            this.listen()
         }
     }
 
-    template(state) { }
+    /* private */$(selector, isAll = false) {
+        return isAll ? this.shadow.queryAllSelector(selector) : this.shadow.querySelector(selector)
+    }
 
-    /* private */directive(template) {
+    /* private */directives(template) {
         let temp
         const title = 'title'
         const [_, directive, value] = template.match(/\s+\*([a-zA-Z\_]+)=\"{1}([^\"]+)\"{1}/) || []
@@ -94,7 +105,7 @@ class Component extends HTMLElement {
         console.log({ attribute, value })
     }
 
-    /* private */listener(template) {
+    /* private */listeners(template) {
         const [_, event, handler] = template.match(/\s+\@([a-zA-Z\_]+)=\"{1}(\S+)\"{1}/) || []
         console.log({ event, handler })
     }
@@ -103,23 +114,13 @@ class Component extends HTMLElement {
     /* private */diff() {
     }
 
-    render() {
+    /* private */render() {
         // this.shadow.innerHTML = template
         // return this.template()
         //     // .replace(/\>\s*\</g, _ => _.replace(/\s+/g, ''))
         //     .replace(/\s*=\s*/g, '=') // 去除等号两边空格
         // // .replace(/\>\s*(\{[\s\S]*\})\s*\</g, _ => _.replace(/\s+/g, '')) // 去除{}空格
     }
-
-    $(selector, isAll = false) {
-        return isAll ? this.shadow.queryAllSelector(selector) : this.shadow.querySelector(selector)
-    }
-
-    // 每次状态更新，需要重新绑定
-    listen() { }
-
-    // 仅在初始化完成时执行一次
-    once() { }
 }
 
 const customElementRegister = (customs) => Object.entries(customs)
