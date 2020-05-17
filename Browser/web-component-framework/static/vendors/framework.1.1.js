@@ -15,12 +15,11 @@ class Component extends HTMLElement {
         this.init()
             .then(({ data, methods, mode }) => {
                 this.create({ data, methods, mode })
-                    .then(this.mount)
+                    .then(this.mount) // ? connectedCallback
             })
     }
 
-    // @return { data, methods, mode }
-    async init() {
+    async init()/* { data, methods, mode } */ {
         return {
             data: {},
             methods: {
@@ -42,7 +41,7 @@ class Component extends HTMLElement {
 
         this.shadow.innerHTML = template
 
-        this.mvvm()
+        this.reactive()
 
         this.props = new Proxy(getAttributes(this), {
             set: (target, key, receiver) => {
@@ -61,6 +60,16 @@ class Component extends HTMLElement {
         this.setState(data)
     }
 
+    async destroy() {}
+
+    /* private */connectedCallback() {
+        // this.mount()
+    }
+
+    /* private */disconnectedCallback() {
+        this.destory()
+    }
+
     template(state) { }
 
     setState(data) {
@@ -70,7 +79,7 @@ class Component extends HTMLElement {
         }
     }
 
-    /* private */mvvm() {
+    /* private */reactive() {
         const analyze = (node) => {
             const vm = {
                 node,
@@ -95,7 +104,7 @@ class Component extends HTMLElement {
             if (node.childNodes && node.childNodes.length > 0) {
                 vm.children = []
                 for (const childNode of node.childNodes) {
-                    return analyze(childNode)
+                    vm.children.push(analyze(childNode))
                 }
             }
             return vm

@@ -141,7 +141,7 @@ Custom Elements come in two major flavours: Autonomous custom elements and Custo
 
 Customized built-in elements have a slightly different usage, where the is attribute is passed when declaring the element in HTML (e.g. `<button is='special-button'>`) used on the standard element, or passing the is property to the `document.createElement` function options (e.g. `document.createElement("button", { is: "special-button" })`).
 
-Custom Element Lifecycle
+## Custom Element Lifecycle
 Custom Elements also have a series of lifecycle events for managing the attachment of the component to and from the DOM:
 
 connectedCallback: connection to the DOM
