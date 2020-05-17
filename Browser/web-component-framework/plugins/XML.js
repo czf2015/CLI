@@ -55,7 +55,5 @@ export default class XML {
             })
         })
         return root
-
-        // 
     }
 }

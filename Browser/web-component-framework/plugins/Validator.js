@@ -15,6 +15,4 @@ export default class Validator {
 
         return this.tips.length > 0
     }
-    // 
-
 }

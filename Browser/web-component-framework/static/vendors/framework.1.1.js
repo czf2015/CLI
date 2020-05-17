@@ -13,13 +13,13 @@ class Component extends HTMLElement {
         super();
 
         this.init()
-            .then(({ data, methods }) => {
-                this.create({ data, methods })
+            .then(({ data, methods, mode }) => {
+                this.create({ data, methods, mode })
                     .then(this.mount)
             })
     }
 
-    // @return { data, methods }
+    // @return { data, methods, mode }
     async init() {
         return {
             data: {},
@@ -29,16 +29,16 @@ class Component extends HTMLElement {
         }
     }
 
-    /* private */async create({ data, methods }) {
-        this.shadow = this.attachShadow({ mode: 'closed' });
+    /* private */async create({ data, methods, mode = 'closed' }) {
+        this.shadow = this.attachShadow({ mode });
 
         this.state = data
         this.methods = methods
 
         const template = this.template()
-            .replace(/\>\s*\</g, _ => _.replace(/\s+/g, ''))
-            .replace(/\s*=\s*/g, '=')
-            .replace(/\>\s*(\{[\s\S]*\})\s*\</g, _ => _.replace(/\s+/g, '')) // 去除{}空格
+            // .replace(/\>\s*\</g, _ => _.replace(/\s+/g, ''))
+            // .replace(/\s*=\s*/g, '=')
+            // .replace(/\>\s*(\{[\s\S]*\})\s*\</g, _ => _.replace(/\s+/g, '')) // 去除{}空格
 
         this.shadow.innerHTML = template
 
@@ -78,23 +78,21 @@ class Component extends HTMLElement {
                 listeners: {},
                 dataset: {},
             }
-            node.getAttributeNames().forEach(attribute => {
-                if (attribute.match(/\:([a-zA-Z\-]+)/)) {
-                    // 
-                    vm.attributes[attribute] = node.getAttribute(attribute)
-                }
-                if (attribute.match(/\:([a-zA-Z\-]+)/)) {
-                    // 
-                    vm.dataset[attribute] = node.getAttribute(attribute)
-                }
-                if (attribute.match(/\@([a-zA-Z\-]+)/)) {
-                    // 
-                    vm.listeners[attribute] = node.getAttribute(attribute)
-                }
-            })
+            if (node.nodeType !== 3/* text */) {
+                const attrs = node.getAttributeNames()
+                attrs.forEach(attr => {
+                    if (attr.match(/\:([a-zA-Z\-]+)/)) {
+                        vm.attributes[attr] = node.getAttribute(attr)
+                    }
+                    if (attr.match(/\:([a-zA-Z\-]+)/)) {
+                        vm.dataset[attr] = node.getAttribute(attr)
+                    }
+                    if (attr.match(/\@([a-zA-Z\-]+)/)) {
+                        vm.listeners[attr] = node.getAttribute(attr)
+                    }
+                })
+            }
             if (node.childNodes && node.childNodes.length > 0) {
-                // console.log(Array.isArray(node.childNodes))
-                // vm.children = node.childNodes.map(analyze)
                 vm.children = []
                 for (const childNode of node.childNodes) {
                     return analyze(childNode)
@@ -137,7 +135,7 @@ const isRoute = (path) => {
 class Router extends Component {
     template(/* { routes } */) {
         return (
-            `<route *for="routes" *if="isRoute(.path)" :key=".tag">{.title}</route>`
+            `<route *for="routes" *if="isRoute(.path)" :key=".title">{.title}</route>`
         )
     }
 }

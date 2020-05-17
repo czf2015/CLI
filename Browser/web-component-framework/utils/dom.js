@@ -1,4 +1,4 @@
-export const getAttributes = (attrs) => {
+export const getAttrs = (attrs) => {
     const attributes = {}
     attrs.trim().replace(/[\'\"]/g, '').split(/\s+/)
         .forEach(attr => {
@@ -8,7 +8,7 @@ export const getAttributes = (attrs) => {
     return attributes
 }
 
-export const setAttributes = (attributes) =>
+export const setAttrs = (attributes) =>
     Object.entries(attributes)
         .map(([attribute, value]) => `${attribute}="${value}"`)
         .join(' ')

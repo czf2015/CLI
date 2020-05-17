@@ -6,16 +6,15 @@ import Router from './Router.js'
 class AppContainer extends Component {
     template(/* { routes } */) {
         return (
-            `<app-header operation="add">header</app-header>
+`<app-header operation="add">header</app-header>
     <main class="app-container">
-        <h1 @click="add" :message="message">Click Me!</h1>
+        <h1 :message="message" @click="add">Click Me!</h1>
         <app-router *if="routes" :routes="routes"></app-router>
         <ul>
             <li *for="list" :key=".">{.}</li>
         </ul>
     </main>
-<app-footer>footer</app-footer>        
-
+<app-footer>footer</app-footer>
 <style>
     .app-container > h1 {
         width: 120px;
