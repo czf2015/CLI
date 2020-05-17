@@ -35,9 +35,9 @@ class Component extends HTMLElement {
         this.methods = methods
 
         const template = this.template()
-            // .replace(/\>\s*\</g, _ => _.replace(/\s+/g, ''))
-            // .replace(/\s*=\s*/g, '=')
-            // .replace(/\>\s*(\{[\s\S]*\})\s*\</g, _ => _.replace(/\s+/g, '')) // 去除{}空格
+            .replace(/\>\s*\</g, _ => _.replace(/\s+/g, ''))
+            .replace(/\s*=\s*/g, '=')
+            .replace(/\>\s*(\{[\s\S]*\})\s*\</g, _ => _.replace(/\s+/g, '')) // 去除{}空格
 
         this.shadow.innerHTML = template
 
@@ -60,7 +60,7 @@ class Component extends HTMLElement {
         this.setState(data)
     }
 
-    async destroy() {}
+    async destroy() { }
 
     /* private */connectedCallback() {
         // this.mount()
@@ -83,18 +83,18 @@ class Component extends HTMLElement {
         const analyze = (node) => {
             const vm = {
                 node,
+                directives: {},
                 attributes: {},
                 listeners: {},
-                dataset: {},
             }
-            if (node.nodeType !== 3/* text */) {
+            if (!['#text', 'SCRIPT'].includes(node.nodeName)/* text */) {
                 const attrs = node.getAttributeNames()
                 attrs.forEach(attr => {
-                    if (attr.match(/\:([a-zA-Z\-]+)/)) {
-                        vm.attributes[attr] = node.getAttribute(attr)
+                    if (attr.match(/\*([a-zA-Z\-]+)/)) {
+                        vm.directives[attr] = node.getAttribute(attr)
                     }
                     if (attr.match(/\:([a-zA-Z\-]+)/)) {
-                        vm.dataset[attr] = node.getAttribute(attr)
+                        vm.attributes[attr] = node.getAttribute(attr)
                     }
                     if (attr.match(/\@([a-zA-Z\-]+)/)) {
                         vm.listeners[attr] = node.getAttribute(attr)
@@ -104,7 +104,9 @@ class Component extends HTMLElement {
             if (node.childNodes && node.childNodes.length > 0) {
                 vm.children = []
                 for (const childNode of node.childNodes) {
-                    vm.children.push(analyze(childNode))
+                    if (!['SCRIPT'].includes(childNode.nodeName)/* SCRIPT */) {
+                        vm.children.push(analyze(childNode))
+                    }
                 }
             }
             return vm
