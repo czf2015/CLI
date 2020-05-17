@@ -1,12 +1,13 @@
 // import Header from './layouts/header/Header.js'
 // import Footer from './layouts/footer/Footer.js'
 import Router from './Router.js'
+import Request from './plugins/Request.js'
 
 
 class AppContainer extends Component {
     template(/* { routes } */) {
         return (
-`<app-header operation="add">header</app-header>
+            `<app-header operation="add">header</app-header>
     <main class="app-container">
         <h1 :message="message" @click="add">Click Me!</h1>
         <app-router *if="routes" :routes="routes"></app-router>
@@ -25,13 +26,15 @@ class AppContainer extends Component {
         )
     }
 
-    listen() {
-        {   // 点击click，验证单向传递
-            this.header = this.$('app-header')
-            this.$('.app-container > h1').addEventListener('click', (e) => {
-                console.log('click')
+    async init() {
+        return await Request.get('/data/population.csv', undefined, { dataType: 'text' })
+            .then(res => {
+                console.log('----------Request------------')
+                console.log(res.text())
+                return {
+                    data: {}
+                }
             })
-        }
     }
 }
 

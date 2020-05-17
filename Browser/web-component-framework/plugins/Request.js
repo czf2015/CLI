@@ -1,3 +1,4 @@
+// docs: https://developer.mozilla.org/zh-CN/docs/Web/API/Fetch_API/Using_Fetch
 // TODO
 import { integrate } from '../utils/index.js'
 

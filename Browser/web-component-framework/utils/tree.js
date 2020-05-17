@@ -4,7 +4,7 @@ const { deepCopy } = require('./object.js')
 export function generate(levels) {
     const _levels = deepCopy(levels)
     let count = 0
-    export function _generate(pid) {
+    const _generate = (pid) => {
         for (let i = 0; i < _levels.length; i++) {
             if (_levels[i].pid == pid.split('/')[0]) {
                 _levels[i].pid += `/${pid.split('/')[1] || 0}`

@@ -9,5 +9,8 @@
     "CLI"
   ],
   "author": "czf",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "xlsx": "^0.16.1"
+  }
 }

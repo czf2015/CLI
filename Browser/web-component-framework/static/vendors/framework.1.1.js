@@ -28,7 +28,7 @@ class Component extends HTMLElement {
         }
     }
 
-    /* private */async create({ data, methods, mode = 'closed' }) {
+    /* private */async create({ data = {}, methods = {}, mode = 'closed' } = {}) {
         this.shadow = this.attachShadow({ mode });
 
         this.state = data
