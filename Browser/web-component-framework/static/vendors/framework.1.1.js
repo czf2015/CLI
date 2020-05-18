@@ -112,7 +112,7 @@ class Component extends HTMLElement {
             }
             if (node.childNodes && node.childNodes.length > 0) {
                 for (const childNode of node.childNodes) {
-                    if (!['SCRIPT'].includes(childNode.nodeName)/* SCRIPT */) {
+                    if (!['SCRIPT', 'STYLE'].includes(childNode.nodeName)/* SCRIPT */) {
                         if (Object.keys(analyze(childNode)).length > 0) {
                             if (!vm.children) {
                                 vm.children = []
