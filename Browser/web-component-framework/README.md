@@ -56,7 +56,7 @@ npm run start
 
 - utils -- 工具函数
 
-- plugins -- 独立包
+- plugins -- 插件包
     |__ Request.js 处理请求
     |__ API.js 接口
     |__ DB.js 数据库
