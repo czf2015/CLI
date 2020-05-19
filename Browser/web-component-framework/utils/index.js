@@ -156,75 +156,95 @@ export const renderHTML = (node) => {
 }
 
 export const parseXML = (xml) => {
-    const fragments = []
-    let cache = []
-    let flag = false
-    const len = xml.length
-    for (let i = 0; i < len; i++) {
-        if (flag) {
-            switch (xml[i]) {
-                case '/':
-                    cache.push('/')
-                    break
-                case '>':
-                    cache.push('>')
-                    fragments.push(cache.join(''))
-                    cache = []
-                    flag = false
-                    break
-                case ' ':
-                    if (xml[i - 1] !== ' ') {
-                        cache.push(' ')
-                    }
-                    break
-                default:
-                    cache.push(xml[i])
-                    break
-            }
-        }
+    console.log(xml)
 
-        switch (xml[i]) {
-            case ' ':
-                if (xml[i - 1] !== '') {
-                    cache.push('<')
-                }
-                break
-            case '<':
-                fragments.push(cache.join(''))
-                cache = []
-                flag = true
-                cache.push('<')
-                break
-            default:
-                cache.push(xml[i])
-                break
+    const fragments = xml.replace(/(\>\s+\<)|(\<\s+)|(\s+\>)|(\s*\/\s*)|(\s*=\s*)|\>\s*(\{[\s\S]*\})\s*\</g, ($, $1, $2, $3, $4, $5) => $1
+        ? '><' : $2
+            ? '<' : $3
+                ? '>' : $4
+                    ? '/' : $5
+                        ? '=' : $.replace(/\s+/g, '')
+    ).split(/\>\s*\</)
+
+    const root = {
+        tag: 'root',
+        children: []
+    }
+
+    const tags = [root]
+
+    const matchType1 = (fragment) => {
+        const pattern = /^\<*(\S+)\s*([^\/\>]*)\/\>/
+        const matches = fragment.match(pattern)
+        if (matches) {
+            if (matches[2].trim()) {
+                tags[0].children.push({
+                    tag: matches[1],
+                    attributes: getAttrs(matches[2].trim()),
+                })
+            } else {
+                tags[0].children.push({
+                    tag: matches[1],
+                })
+            }
+            return true
         }
     }
 
-    const node = {}
-
-    // 再处理children 
-    fragments.forEach(fragment => {
-        // 
-        if (fragment.match(/^\<\s*([a-zA-Z\-]+)([^\\]+)\>$/)) {
-            // 
-            const [_, tag, $2] = fragment.match(/^\<\s*([a-zA-Z\-]+)([^\\]+)\>$/)
-            const attributes = getAttributes($2)
+    const matchType2 = (fragment) => {
+        const pattern = /^\<*(\S+)\s*([^\/\>]*)\>([\s\S]*)\<\//
+        const matches = fragment.match(pattern)
+        if (matches) {
+            if (matches[2].trim()) {
+                tags[0].children.push({
+                    tag: matches[1],
+                    attributes: getAttrs(matches[2].trim()),
+                    text: matches[3]
+                })
+            } else {
+                tags[0].children.push({
+                    tag: matches[1],
+                    text: matches[3]
+                })
+            }
+            return true
         }
+    }
 
-        if (fragment.match(/^\<\s*([a-zA-Z\-]+)\\\s*\>$/)) {
-            // 
-            const [_, tag] = fragment.match(/^\<\s*([a-zA-Z\-]+)\\\s*\>$/)
+    const matchType3 = (fragment) => {
+        const pattern = /^\//
+        if (fragment.match(pattern)) {
+            const tag = tags.shift()
+            tags[0].children.push(tag)
+            return true
         }
+    }
 
-        if (fragment.match(/^\<\s*\/([a-zA-Z\-]+)\s*\>$/)) {
-            // 
-            const [_, tag] = fragment.match(/^\<\s*\/([a-zA-Z\-]+)\s*\>$/)
+    const matchType4 = (fragment) => {
+        const pattern = /^\<*(\S+)\s*([^\/\>]*)$/
+        const matches = fragment.match(pattern)
+        if (matches) {
+            if (matches[2].trim()) {
+                tags.unshift({
+                    tag: matches[1],
+                    attributes: getAttrs(matches[2].trim()),
+                    children: []
+                })
+            } else {
+                tags.unshift({
+                    tag: matches[1],
+                    children: []
+                })
+            }
+            return true
         }
+    }
 
-        text = fragment
-    })
+    const matchType = (fragment) => matchType1(fragment) || matchType2(fragment) || matchType3(fragment) || matchType4(fragment)
 
+    fragments.forEach(matchType)
+
+    return root
 }
 
 export function generate(levels) {
