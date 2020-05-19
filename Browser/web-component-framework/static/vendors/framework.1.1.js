@@ -1,6 +1,16 @@
 
 // docs: [HTMLElement](https://www.w3school.com.cn/xmldom/dom_htmlelement.asp)
 
+const getAttrs = (attrs) => {
+    const attributes = {}
+    attrs.trim().replace(/[\'\"]/g, '').split(/\s+/)
+        .forEach(attr => {
+            const [attribute, value] = attr.split('=')
+            attributes[attribute] = value
+        })
+    return attributes
+}
+
 class Component extends HTMLElement {
     constructor() {
         super();
@@ -69,17 +79,142 @@ class Component extends HTMLElement {
     }
 
     /* private */reactive(props, data, computed, methods) {
-        this.shadow.innerHTML = this.template()
         const state = { ...data, ...props }
         Object.keys(computed).forEach(key => {
             Object.defineProperty(state, key, {
-                get () {
+                get() {
                     return computed[key](state)
                 }
             })
         })
         this.state = state
         this.methods = methods
+        const [template, style] = this.template()
+        // console.log(template)
+        // console.log(style)
+        const tmpl = template.replace(/(\>\s+\<)|(\<\s+)|(\s+\>)|(\s*\/\s*)|(\s*=\s*)|\>\s*(\{[\s\S]*\})\s*\</g, ($, $1, $2, $3, $4, $5) => $1
+            ? '><' : $2
+                ? '<' : $3
+                    ? '>' : $4
+                        ? '/' : $5
+                            ? '=' : $.replace(/\s+/g, '')
+        ).split(/\>\s*\</)
+
+        const vm = {
+            tag: 'root',
+            children: []
+        }
+        const tags = [vm]
+        tmpl.forEach(item => {
+            let matches = item.match(/^\<*(\S+)\s*([^\/\>]*)\/\>/)
+            if (matches) {
+                if (matches[2].trim()) {
+                    tags[0].children.push({
+                        tag: matches[1],
+                        attributes: getAttrs(matches[2].trim()),
+                    })
+                } else {
+                    tags[0].children.push({
+                        tag: matches[1],
+                    })
+                }
+                return
+            }
+            matches = item.match(/^\<*(\S+)\s*([^\/\>]*)\>([\s\S]*)\<\//)
+            if (matches) {
+                if (matches[2].trim()) {
+                    tags[0].children.push({
+                        tag: matches[1],
+                        attributes: getAttrs(matches[2].trim()),
+                        text: matches[3]
+                    })
+                } else {
+                    tags[0].children.push({
+                        tag: matches[1],
+                        text: matches[3]
+                    })
+                }
+                return
+            }
+            if (item.match(/^\//)) {
+                const item = tags.shift()
+                tags[0].children.push(item)
+                return
+            }
+            matches = item.match(/^\<*(\S+)\s*([^\/\>]*)$/)
+            if (matches) {
+                if (matches[2].trim()) {
+                    tags.unshift({
+                        tag: matches[1],
+                        attributes: getAttrs(matches[2].trim()),
+                        children: []
+                    })
+                } else {
+                    tags.unshift({
+                        tag: matches[1],
+                        children: []
+                    })
+                }
+                return
+            }
+        })
+        console.log(vm)
+
+        console.log(tmpl)
+        // console.log(style)
+        const len = tmpl.length
+        // let flag = ''
+        // const tags = []
+        const cache = []
+        let flag
+        let tag
+        // for (let i = 0; i < len; i++) {
+        //     // if (tags.length == 0) {
+        //         const c = tmpl[i]
+        //         switch (c) {
+        //             case '<':
+        //                 if (tag && flag == tag && cache.length > 0) {
+        //                     const text = cache.join('')
+        //                     console.log({ text })
+        //                 }
+        //                 flag = 'start'
+        //                 break
+        //             case '>':
+        //                 if (flag = tag) {
+        //                     const attributes = getAttrs(cache.join(''))
+        //                     console.log({ attributes })
+        //                     cache.length = 0
+        //                 }
+        //                 break
+        //             case '/':
+        //                 flag = 'end'
+        //                 tags.shift()
+        //                 break
+        //             case ' ':
+        //                 switch (flag) {
+        //                     case 'start':
+        //                         tag = cache.join('')
+        //                         console.log({ tag })
+        //                         tags.unshift(tag)
+        //                         cache.length = 0
+        //                         flag = tag
+        //                         break
+        //                     case tag:
+        //                         cache.push(c)
+        //                     default:
+        //                         break
+        //                 }
+        //             default:
+        //                 if (flag !== 'end') {
+        //                     cache.push(c)
+        //                 }
+        //                 break
+        //         }
+        //     // } else {
+        //     // }
+        // }
+
+        // this.shadow.innerHTML = this.template()
         const analyze = (node) => {
             const vm = {
                 // node,
@@ -124,9 +259,9 @@ class Component extends HTMLElement {
             }
             return vm
         }
-        this.vm = analyze(this.shadowRoot)
-        console.log(this.vm)
-        console.log(this.vm.children[0].children[0].vnode)
+        // this.vm = analyze(this.shadowRoot)
+        // console.log(this.vm)
+        // console.log(this.vm.children[0].children[0].vnode)
         // console.log(this.vm.children[1])
     }
 
