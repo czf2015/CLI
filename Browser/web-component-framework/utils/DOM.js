@@ -47,12 +47,12 @@ export const parseXML = (xml) => {
         const matches = fragment.match(pattern)
         if (matches) {
             if (matches[2].trim()) {
-                tags[0].children.push({
+                tags[tags.length - 1].children.push({
                     tag: matches[1],
                     attributes: getAttrs(matches[2].trim()),
                 })
             } else {
-                tags[0].children.push({
+                tags[tags.length - 1].children.push({
                     tag: matches[1],
                 })
             }
@@ -65,13 +65,13 @@ export const parseXML = (xml) => {
         const matches = fragment.match(pattern)
         if (matches) {
             if (matches[2].trim()) {
-                tags[0].children.push({
+                tags[tags.length - 1].children.push({
                     tag: matches[1],
                     attributes: getAttrs(matches[2].trim()),
                     text: matches[3]
                 })
             } else {
-                tags[0].children.push({
+                tags[tags.length - 1].children.push({
                     tag: matches[1],
                     text: matches[3]
                 })
@@ -83,8 +83,8 @@ export const parseXML = (xml) => {
     const matchType3 = (fragment) => {
         const pattern = /^\//
         if (fragment.match(pattern)) {
-            const tag = tags.shift()
-            tags[0].children.push(tag)
+            const tag = tags.pop()
+            tags[tags.length - 1].children.push(tag)
             return true
         }
     }
@@ -94,13 +94,13 @@ export const parseXML = (xml) => {
         const matches = fragment.match(pattern)
         if (matches) {
             if (matches[2].trim()) {
-                tags.unshift({
+                tags.push({
                     tag: matches[1],
                     attributes: getAttrs(matches[2].trim()),
                     children: []
                 })
             } else {
-                tags.unshift({
+                tags.push({
                     tag: matches[1],
                     children: []
                 })
@@ -114,4 +114,60 @@ export const parseXML = (xml) => {
     fragments.forEach(matchType)
 
     return root
+}
+
+// 参考: https://github.com/livoras/simple-virtual-dom
+export const setAttribute = (node, key, value) => {
+    switch (key) {
+        case 'style':
+            node.style.cssText = value
+            break
+        case 'value':
+            const tagName = node.tagName || ''
+            if (['input', 'textarea'].includes(tagName.toLowerCase())) {
+                node.value = value
+            } else {
+                node.setAttribute(key, value)
+            }
+            break
+        default:
+            node.setAttribute(key, value)
+            break
+    }
+}
+// 同上
+export class Element {
+    constructor(tagName, props, children) {
+        this.tagName = tagName
+        this.props = props
+        this.children = children
+    }
+
+    render() {
+        const el = document.createElement(this.tagName) // 根据tagName构建
+
+        // 设置节点的DOM属性
+        Object.keys(this.props).forEach(propName => {
+            return setAttribute(el, propName, this.props[propName])
+        })
+
+        if (this.children) {
+            this.children.forEach((child) => {
+                const childEl = child instanceof Element
+                    ? child.render() // 如果子节点也是虚拟DOM，递归构建DOM节点
+                    : document.createTextNode(child) // 如果字符串，只构建文本节点
+                el.appendChild(childEl)
+            })
+        }
+
+        return el
+    }
+
+    setAttribute(key, value) {
+        Object.assign(this.props, { [key]: value })
+    }
+
+    getAttribute(key) {
+        return this.props[key]
+    }
 }

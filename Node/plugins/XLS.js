@@ -36,14 +36,18 @@ module.exports = class XLS {
     }
 
     // 多联表
-    join(sheet, names, patterns) {
+    join(sheet) {
         const result = {}
-        const sheets = names.map(name => ({ name, data: [] }))
-        let sheetsIdx = 0
+        const sheets = []
+        let sheetsIdx = -1
+        let name = ''
         this.toJSON(sheet)
             .forEach(row => {
                 let col = 0
                 for (let key in row) {
+                    if (col == 0) {
+                        name = row[key]
+                    }
                     if (row[key]) {
                         col++
                     } else {
@@ -54,6 +58,7 @@ module.exports = class XLS {
                     sheets[sheetsIdx].data.push(row)
                 }
                 if (col === 1) {
+                    sheets.push({ name, data: [] })
                     sheetsIdx++
                 }
             })
@@ -64,8 +69,9 @@ module.exports = class XLS {
                     key: '',
                     entries: [],
                 }
+                let col = 0
                 for (let key in header) {
-                    if (patterns.some(pattern => header[key].match(pattern))) {
+                    if (col == 0) {
                         keyMap.key = record[key]
                     } else {
                         keyMap.entries.push({
@@ -73,6 +79,7 @@ module.exports = class XLS {
                             value: record[key]
                         })
                     }
+                    col++
                 }
                 return keyMap
             }

@@ -155,7 +155,7 @@ export const renderHTML = (node) => {
     }
 }
 
-export const parseXML = (xml) => {
+const parseXML = (xml) => {
     console.log(xml)
 
     const fragments = xml.replace(/(\>\s+\<)|(\<\s+)|(\s+\>)|(\s*\/\s*)|(\s*=\s*)|\>\s*(\{[\s\S]*\})\s*\</g, ($, $1, $2, $3, $4, $5) => $1
@@ -178,12 +178,12 @@ export const parseXML = (xml) => {
         const matches = fragment.match(pattern)
         if (matches) {
             if (matches[2].trim()) {
-                tags[0].children.push({
+                tags[tags.length - 1].children.push({
                     tag: matches[1],
                     attributes: getAttrs(matches[2].trim()),
                 })
             } else {
-                tags[0].children.push({
+                tags[tags.length - 1].children.push({
                     tag: matches[1],
                 })
             }
@@ -196,13 +196,13 @@ export const parseXML = (xml) => {
         const matches = fragment.match(pattern)
         if (matches) {
             if (matches[2].trim()) {
-                tags[0].children.push({
+                tags[tags.length - 1].children.push({
                     tag: matches[1],
                     attributes: getAttrs(matches[2].trim()),
                     text: matches[3]
                 })
             } else {
-                tags[0].children.push({
+                tags[tags.length - 1].children.push({
                     tag: matches[1],
                     text: matches[3]
                 })
@@ -214,8 +214,8 @@ export const parseXML = (xml) => {
     const matchType3 = (fragment) => {
         const pattern = /^\//
         if (fragment.match(pattern)) {
-            const tag = tags.shift()
-            tags[0].children.push(tag)
+            const tag = tags.pop()
+            tags[tags.length - 1].children.push(tag)
             return true
         }
     }
@@ -225,13 +225,13 @@ export const parseXML = (xml) => {
         const matches = fragment.match(pattern)
         if (matches) {
             if (matches[2].trim()) {
-                tags.unshift({
+                tags.push({
                     tag: matches[1],
                     attributes: getAttrs(matches[2].trim()),
                     children: []
                 })
             } else {
-                tags.unshift({
+                tags.push({
                     tag: matches[1],
                     children: []
                 })
