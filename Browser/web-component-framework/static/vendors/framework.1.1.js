@@ -3,7 +3,6 @@
 
 const getAttrs = (attrs) => {
     const attributes = {}
-    // TODO(czf) 属性值可能存在空格，如何做处理？2020-06-10
     let flag = 0
     let attributeName = ''
     let attributeValue = ''
