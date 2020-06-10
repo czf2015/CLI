@@ -3,11 +3,50 @@
 
 const getAttrs = (attrs) => {
     const attributes = {}
-    attrs.trim().replace(/[\'\"]/g, '').split(/\s+/)
-        .forEach(attr => {
-            const [attribute, value] = attr.split('=')
-            attributes[attribute] = value
-        })
+    // TODO(czf) 属性值可能存在空格，如何做处理？2020-06-10
+    let flag = 0
+    let attributeName = ''
+    let attributeValue = ''
+    let startTag
+    for  (let i = 0; i < attrs.length; i++) {
+        switch (flag) {
+            case 0:
+                if (attrs[i]) {
+                    flag = 1
+                    attributeName = attrs[i]
+                }
+                break
+            case 1:
+                if (attrs[i]) {
+                    if (attrs[i] == '=') {
+                        flag = 2
+                    } else {
+                        attributeName += attrs[i]
+                    }
+                }
+                break
+            case 2:
+                if (attrs[i]) {
+                    if (startTag) {
+                        if (attrs[i] == startTag) {
+                            attributes[attributeName] = attributeValue
+                            attributeName = attributeValue = ''
+                            startTag = undefined
+                            flag = 0
+                        } else {
+                            attributeValue += attrs[i]
+                        }
+                    } else {
+                        if (attrs[i] == '\'' || attrs[i] == '\"') {
+                            startTag = attrs[i]
+                        }
+                    }
+                }
+                break
+            default:
+                break
+        }
+    }
     return attributes
 }
 
