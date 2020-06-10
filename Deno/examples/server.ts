@@ -5,7 +5,6 @@ for await (const req of s) {
   req.respond({ body: "Hello World\n" });
 }
 
-
 // const url = args[0]
 // const res = await fetch(url)
 // console.log(res.url)

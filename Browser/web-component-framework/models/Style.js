@@ -16,9 +16,10 @@ export const Style = {
     height: '0', // h
     font: {
         family: '',
-        varant: '',
-        size: '',
+        style: '',
         weight: '',
+        size: '',
+        varant: '',
         stretch: '',
         default: 'inherit',
     },
