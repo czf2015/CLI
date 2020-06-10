@@ -3,10 +3,10 @@
 
 const getAttrs = (attrs) => {
     const attributes = {}
-    let flag = 0
+    let flag = 0 // 0 --非属性 1 --属性名 2 --属性值
     let attributeName = ''
     let attributeValue = ''
-    let startTag
+    let startTag // 属性值起始符 ' --单引号 " --双引号 undefined --未定义
     for  (let i = 0; i < attrs.length; i++) {
         switch (flag) {
             case 0:
