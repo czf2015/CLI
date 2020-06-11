@@ -6,39 +6,44 @@ import Request from './plugins/Request.js'
 
 class AppContainer extends Component {
     template() {
-        return [
+        return (
 `<app-header operation="add">header</app-header>
 <main class="app-container">
     <h1 :message = "message" @click="add"> Click Me! </h1>
     <app-router *if="routes" :routes="routes"></app-router>
     <ul>
-        <li *for="list" :key=".">{ .}</li>
+        <li *for="list" :key=".">{.}</li>
     </ul>
 </main>
-<app-footer>footer</app-footer>`,
+<app-footer>footer</app-footer>`
+        )
+    }
+
+    style() {
+        return (
 `<style>
-.app-container > h1 {
-    width: 120px;
-    border: solid;
-    cursor: pointer;
-}
+    .app-container > h1 {
+        width: 120px;
+        border: solid;
+        cursor: pointer;
+    }
 </style>`
-        ]        
+        )        
     }
 
     async init() {
         return await Request.get('/data/population.csv', undefined, { dataType: 'text' })
             .then(res => {
                 console.log('----------Request------------')
-                console.log(res.text())
+                // console.log(res.text())
                 return {
                     props: {
                         routes: []
                     },
 
                     data: {
-                        a: 1,
-                        b: 2,
+                        a: 12,
+                        b: 23,
                         list: [1, 2, 3]
                     },
 
@@ -51,6 +56,9 @@ class AppContainer extends Component {
                     methods: {
                         add(a, b) {
                             return a + b
+                        },
+                        sub(a, b) {
+                            return a - b
                         }
                     },
 
