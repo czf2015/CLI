@@ -139,9 +139,23 @@ const parseXML = (xml) => {
     return root
 }
 
+const setAttrs = (attributes) =>
+    Object.entries(attributes)
+        .map(([attribute, value]) => {
+            console.log({attribute, value})
+            return `${attribute}="${typeof value == 'object' ? value.value : value}"`
+        })
+        .join(' ')
+
 const renderHTML = (node) => {
-    // 
-    // const template
+    // TODO(czf)
+    const h = ({ render, params, text }) => render ? render(params) : text || ''
+    if (Array.isArray(node)) {
+        return node.map(renderHTML).join('')
+    } else {
+        const { tag, attributes, children } = node
+        return `<${tag} ${setAttrs(attributes)}>${children ? renderHTML(children) : h(node)}</${tag}>`
+    }
 }
 
 const analyze = (xml) => {
@@ -317,7 +331,8 @@ class Component extends HTMLElement {
         // updateState = await this.diff(updateState)
         console.log(this.vm)
         console.log('--------------render--------------')
-        console.log(updateState)
+        const html = renderHTML(this.vm.children)
+        console.log(html)
         // updateState.
         // nodes.forEach(node => {
         //     const { selector, attribute, value } = node
