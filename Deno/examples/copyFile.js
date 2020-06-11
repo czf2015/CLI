@@ -1,4 +1,4 @@
-const { copyFile, args } = Deno
+const { copyFile, args } = Deno;
 
 await copyFile("./server.ts", "./server.js");
 
