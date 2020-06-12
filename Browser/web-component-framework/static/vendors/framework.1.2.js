@@ -65,6 +65,7 @@ const parseXML = (xml) => {
 
     const tags = [root]
 
+    // <tag attrs />
     const matchType1 = (fragment) => {
         const pattern = /^\<*(\S+)\s*([^\/\>]*)\/\>/
         const matches = fragment.match(pattern)
@@ -83,6 +84,7 @@ const parseXML = (xml) => {
         }
     }
 
+    // <tag attrs>text</
     const matchType2 = (fragment) => {
         const pattern = /^\<*(\S+)\s*([^\/\>]*)\>([\s\S]*)\<\//
         const matches = fragment.match(pattern)
@@ -103,6 +105,7 @@ const parseXML = (xml) => {
         }
     }
 
+    // /
     const matchType3 = (fragment) => {
         const pattern = /^\//
         if (fragment.match(pattern)) {
@@ -112,6 +115,7 @@ const parseXML = (xml) => {
         }
     }
 
+    // <tag attrs
     const matchType4 = (fragment) => {
         const pattern = /^\<*(\S+)\s*([^\/\>]*)$/
         const matches = fragment.match(pattern)
@@ -139,28 +143,45 @@ const parseXML = (xml) => {
     return root
 }
 
-const setAttrs = (attributes) =>
-    Object.entries(attributes)
-        .map(([attribute, value]) => {
-            console.log({attribute, value})
-            return `${attribute}="${typeof value == 'object' ? value.value : value}"`
+const setAttrs = (attributes) => {
+    if (typeof attributes == 'undefined') return ''
+    return Object.entries(attributes)
+        .map(([attributeName, attributeValue]) => {
+            if (typeof attributeValue == 'object') {
+                // TODO(czf) --eval
+                const { type, value } = attributeValue
+                attributeValue = value
+            }
+            return ` ${attributeName}="${attributeValue}"`
         })
-        .join(' ')
+        .join('')
+}
 
 const renderHTML = (node) => {
-    // TODO(czf)
-    const h = ({ render, params, text }) => render ? render(params) : text || ''
-    if (Array.isArray(node)) {
-        return node.map(renderHTML).join('')
-    } else {
-        const { tag, attributes, children } = node
-        return `<${tag} ${setAttrs(attributes)}>${children ? renderHTML(children) : h(node)}</${tag}>`
+    const renderText = text => {
+        if (typeof text === 'object') {
+            // TODO(czf) --eval
+            return text.value
+        } else {
+            return text || ''
+        }
     }
+    if (Array.isArray(node)) {
+        return node.map(childNode => renderHTML(childNode)).join('')
+    } else {
+        const { tag, attributes, children, key } = node
+        return `<${tag}${setAttrs(attributes)}${setAttrs({ key })}>${children ? renderHTML(children) : renderText(node.text)}</${tag}>`
+    }
+}
+
+const registerEvents = () => {
+    // 
 }
 
 const analyze = (xml) => {
     const vm = parseXML(xml)
-    const handle = (node) => {
+    const handle = (node, key = node.tag) => {
+        node.key = key
         if (node.attributes) {
             for (let key in node.attributes) {
                 if (key.match(/^[\*]/)) {
@@ -191,8 +212,13 @@ const analyze = (xml) => {
                 }
             }
         }
+        this.cache.listeners = [
+            {
+                selector
+            }
+        ]
         if (node.children) {
-            node.children.forEach(handle)
+            node.children.forEach((childNode, idx) => handle(childNode, `${node.key}${idx}-${childNode.tag}`))
         }
     }
     handle(vm)
@@ -232,7 +258,12 @@ const isEqual = (a, b) => {
 class Component extends HTMLElement {
     constructor() {
         super();
-        this.cache = {}
+        this.cache = {
+            state: {},
+            // directives: [],
+            listeners: [],
+            selector: {},
+        }
         this.init()
             .then(({ props, data, computed, methods, mode }) => {
                 this.create({ props, data, computed, methods, mode })
@@ -252,9 +283,9 @@ class Component extends HTMLElement {
 
     /* private */$(selector) {
         if (selector) {
-            this.cache[selector] = this.shadow.querySelector(selector)
+            this.cache.selector[selector] = this.shadow.querySelector(selector)
         }
-        return this.cache[selector]
+        return this.cache.selector[selector]
     }
 
     async mount() { }
@@ -329,10 +360,13 @@ class Component extends HTMLElement {
 
     /* private */async render(updateState) {
         // updateState = await this.diff(updateState)
-        console.log(this.vm)
-        console.log('--------------render--------------')
-        const html = renderHTML(this.vm.children)
-        console.log(html)
+        if (!this.shadowRoot.innerHTML) {
+            console.log(this.vm.children)
+            this.shadowRoot.innerHTML = renderHTML(this.vm.children) + this.style()
+        } else {
+            // TODO(czf) 数据更新
+        }
+        // console.log(html)
         // updateState.
         // nodes.forEach(node => {
         //     const { selector, attribute, value } = node
