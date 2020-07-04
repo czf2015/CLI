@@ -1,4 +1,4 @@
-// TOFIX
+// FIXME(czf)
 export default class Template {
     constructor(template, matches = {
         range: /\`([\s\S]*)\`/g,

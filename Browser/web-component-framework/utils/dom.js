@@ -20,7 +20,7 @@ export const renderHTML = (node) => {
         return node.map(renderHTML).join('')
     } else {
         const { tag, attributes, children } = node
-        return `<${tag} ${attrs(attributes)}>${children ? renderHTML(children) : h(node)}</${tag}>`
+        return `<${tag} ${setAttrs(attributes)}>${children ? renderHTML(children) : h(node)}</${tag}>`
     }
 }
 
